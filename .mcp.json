@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "ng-diagram-docs": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@ng-diagram/mcp"]
+    },
+    "figma": {
+      "type": "http",
+      "url": "https://mcp.figma.com/mcp"
+    }
+  }
+}
