@@ -1,0 +1,18 @@
+<ng-diagram-node-rotate-adornment />
+<ng-diagram-node-resize-adornment>
+  <div class="character-node">
+    <ng-icon [name]="iconName()" class="character-node__icon" />
+    <div class="character-node__hp-track">
+      <div
+        class="character-node__hp-fill"
+        [style.width.%]="hpPercent()"
+        [style.background-color]="hpColor()"
+      ></div>
+    </div>
+  </div>
+
+  <ng-diagram-port id="port-top"    type="both" side="top"    />
+  <ng-diagram-port id="port-right"  type="both" side="right"  />
+  <ng-diagram-port id="port-bottom" type="both" side="bottom" />
+  <ng-diagram-port id="port-left"   type="both" side="left"   />
+</ng-diagram-node-resize-adornment>
