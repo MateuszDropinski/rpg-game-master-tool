@@ -8,25 +8,16 @@ import {
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
   phosphorBooks,
-  phosphorCaretLeft,
-  phosphorNote,
+  phosphorCaretRight,
   phosphorPlus,
 } from '@ng-icons/phosphor-icons/regular';
-import {
-  NgDiagramPaletteItemComponent,
-  NgDiagramPaletteItemPreviewComponent,
-} from 'ng-diagram';
 import { NotesStore } from '../../state/notes.store';
 
 @Component({
   selector: 'app-library-sidebar',
-  imports: [
-    NgIcon,
-    NgDiagramPaletteItemComponent,
-    NgDiagramPaletteItemPreviewComponent,
-  ],
+  imports: [NgIcon],
   providers: [
-    provideIcons({ phosphorBooks, phosphorCaretLeft, phosphorNote, phosphorPlus }),
+    provideIcons({ phosphorBooks, phosphorCaretRight, phosphorPlus }),
   ],
   templateUrl: './library-sidebar.component.html',
   styleUrl: './library-sidebar.component.css',

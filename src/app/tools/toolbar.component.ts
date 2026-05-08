@@ -1,13 +1,20 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, output, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { phosphorCircleDashed, phosphorRuler } from '@ng-icons/phosphor-icons/regular';
+import {
+  phosphorAsterisk,
+  phosphorChatCentered,
+  phosphorMapPinLine,
+  phosphorRuler,
+  phosphorUser,
+} from '@ng-icons/phosphor-icons/regular';
 import { NgDiagramViewportService } from 'ng-diagram';
 
 import { CircleController } from '../circle/circle.controller';
 import { RulerController } from '../ruler/ruler.controller';
+import { NoteToolController } from './note-tool.controller';
 import type { Tool } from './tool';
 
-type ToolName = 'ruler' | 'circle';
+type ToolName = 'ruler' | 'circle' | 'note';
 
 @Component({
   selector: 'app-toolbar',
@@ -17,7 +24,14 @@ type ToolName = 'ruler' | 'circle';
   providers: [
     RulerController,
     CircleController,
-    provideIcons({ phosphorRuler, phosphorCircleDashed }),
+    NoteToolController,
+    provideIcons({
+      phosphorRuler,
+      phosphorAsterisk,
+      phosphorChatCentered,
+      phosphorMapPinLine,
+      phosphorUser,
+    }),
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -25,6 +39,9 @@ export class ToolbarComponent {
   private viewport = inject(NgDiagramViewportService);
   private ruler = inject(RulerController);
   private circle = inject(CircleController);
+  private note = inject(NoteToolController);
+
+  readonly addCharacterClicked = output<void>();
 
   activeTool = signal<ToolName | null>(null);
   private dragging = false;
@@ -74,6 +91,7 @@ export class ToolbarComponent {
   private controllerFor(name: ToolName | null): Tool | null {
     if (name === 'ruler') return this.ruler;
     if (name === 'circle') return this.circle;
+    if (name === 'note') return this.note;
     return null;
   }
 

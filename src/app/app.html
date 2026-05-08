@@ -1,9 +1,3 @@
-<app-library-sidebar
-  [collapsed]="sidebarCollapsed()"
-  (collapsedChange)="sidebarCollapsed.set($event)"
-  (addCharacterClicked)="openAddCharacterDialog()"
-/>
-
 <div class="canvas">
   <app-map-switcher
     [maps]="maps()"
@@ -27,7 +21,7 @@
     </ng-diagram>
     <app-grid-overlay />
   </div>
-  <app-toolbar />
+  <app-toolbar (addCharacterClicked)="openAddCharacterDialog()" />
   @if (activeMap(); as map) {
     @if (map.imageUrl) {
       <button
@@ -56,6 +50,12 @@
     <app-cube [multiplier]="1" [value]="1" />
   </div>
 </div>
+
+<app-library-sidebar
+  [collapsed]="sidebarCollapsed()"
+  (collapsedChange)="sidebarCollapsed.set($event)"
+  (addCharacterClicked)="openAddCharacterDialog()"
+/>
 
 <app-add-character-dialog
   [open]="addCharacterDialogOpen()"

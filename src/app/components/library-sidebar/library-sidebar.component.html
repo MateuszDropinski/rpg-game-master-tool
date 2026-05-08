@@ -21,7 +21,7 @@
         aria-label="Collapse library"
         (click)="toggle()"
       >
-        <ng-icon name="phosphorCaretLeft" size="18" />
+        <ng-icon name="phosphorCaretRight" size="18" />
       </button>
     </header>
 
@@ -41,19 +41,6 @@
     <section class="notes-section">
       <h3 class="section-title">Notes</h3>
 
-      <ng-diagram-palette-item [item]="store.paletteItem">
-        <div class="palette-note">
-          <ng-icon name="phosphorNote" size="16" />
-          <span>Note</span>
-        </div>
-        <ng-diagram-palette-item-preview>
-          <div class="palette-note palette-note--preview">
-            <ng-icon name="phosphorNote" size="16" />
-            <span>Note</span>
-          </div>
-        </ng-diagram-palette-item-preview>
-      </ng-diagram-palette-item>
-
       <div class="note-list" aria-live="polite">
         @for (note of store.notes(); track note.id) {
           <button
@@ -66,7 +53,7 @@
             {{ note.data.text || '(empty note)' }}
           </button>
         } @empty {
-          <p class="empty">No notes yet — drag the Note item onto the map.</p>
+          <p class="empty">No notes yet — use the toolbar to place a note.</p>
         }
       </div>
     </section>

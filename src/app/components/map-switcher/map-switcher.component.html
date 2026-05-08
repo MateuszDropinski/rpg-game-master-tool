@@ -1,22 +1,55 @@
-<div class="pill" role="toolbar" aria-label="Maps">
-  @for (map of maps(); track map.id) {
-    <button
-      type="button"
-      class="map-button"
-      [class.active]="map.id === activeMapId()"
-      (click)="onActivate(map.id)"
-    >
-      {{ map.name }}
-    </button>
-  }
+<div class="switcher" role="toolbar" aria-label="Maps">
+  <div class="locations">
+    @for (map of visibleMaps(); track map.id) {
+      <button
+        type="button"
+        class="pill"
+        [class.active]="map.id === activeMapId()"
+        (click)="onActivate(map.id)"
+      >
+        @if (map.id === activeMapId()) {
+          <ng-icon name="phosphorMapTrifold" size="16" />
+        }
+        <span class="label">{{ map.name }}</span>
+      </button>
+    }
+    @if (hasOverflow()) {
+      <div class="more-wrapper" #moreWrapper>
+        <button
+          type="button"
+          class="pill"
+          [class.active]="dropdownOpen()"
+          (click)="toggleDropdown()"
+          [attr.aria-expanded]="dropdownOpen()"
+        >
+          <span class="label">More</span>
+          <ng-icon name="phosphorCaretDown" size="16" />
+        </button>
+        @if (dropdownOpen()) {
+          <ul class="dropdown" role="menu">
+            @for (map of overflowMaps(); track map.id) {
+              <li>
+                <button
+                  type="button"
+                  class="dropdown-item"
+                  (click)="onOverflowActivate(map.id)"
+                >
+                  {{ map.name }}
+                </button>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    }
+  </div>
   <button
     type="button"
     class="add-button"
-    title="Add map"
-    aria-label="Add map"
     (click)="openDialog()"
   >
-    <ng-icon name="phosphorPlus" size="16" />
+    <ng-icon name="phosphorPlusCircle" size="16" />
+    <span class="label">Add new location</span>
   </button>
 </div>
 
