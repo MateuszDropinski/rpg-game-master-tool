@@ -1,0 +1,33 @@
+:host {
+  position: absolute;
+  top: 16px;
+  left: 25%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 14px var(--spacing-4);
+  background: var(--color-bg-overlay);
+  border: 1px solid var(--color-text-primary);
+  border-radius: var(--radius-md);
+  font: 500 14px/20px var(--font-roboto);
+  letter-spacing: 0.1px;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.toggle-btn.reduced {
+  background: var(--color-bg-brand-subtle);
+  border-color: var(--color-border-brand);
+  color: #fff;
+}

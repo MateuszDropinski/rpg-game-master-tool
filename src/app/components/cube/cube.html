@@ -1,0 +1,27 @@
+@let data = icosa();
+
+<div class="wrapper">
+  <!-- <div class="current-value">{{ currentValue() }}</div> -->
+  <div class="cube-area" [style.--cube-size.px]="size()" [style.visibility]="visible() ? 'visible' : 'hidden'">
+    <button type="button" class="close-btn" (click)="hide()">✕</button>
+    <div
+      class="scene"
+      [style.--cube-size.px]="size()"
+      [style.--edge.px]="data.edge"
+      [style.--dist.px]="data.dist"
+    >
+      <div class="cube" [class.no-animation]="noAnimation()" [style.transform]="cubeTransform()">
+        @for (face of data.faces; track face.label) {
+          <div
+            class="face"
+            [style.--yaw.deg]="face.yaw"
+            [style.--pitch.deg]="face.pitch"
+            [style.--roll.deg]="face.roll"
+          >
+            <span class="label">{{ face.label }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

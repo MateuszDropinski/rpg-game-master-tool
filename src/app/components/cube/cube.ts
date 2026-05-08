@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { AccessibilityService } from '../../core/services/accessibility.service';
 
 const SPIN_DURATION_MS = 3000;
 const EXTRA_SPINS_PER_DRAW_Y = 1080;
@@ -11,16 +12,20 @@ const EXTRA_SPINS_PER_DRAW_X = 720;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Cube {
+  private readonly accessibility = inject(AccessibilityService);
+
   readonly size = input<number>(200);
   readonly multiplier = input<number>(1);
   readonly value = input<number>(1);
+
+  protected readonly noAnimation = this.accessibility.disableCubeRotation;
 
   protected readonly icosa = computed(() => buildIcosahedron(this.size(), this.multiplier()));
 
   private readonly drawnFace = signal<number | null>(null);
   private readonly displayedFace = signal<number | null>(null);
   private readonly spinCount = signal(0);
-  protected readonly isAnimating = signal(false);
+  readonly isAnimating = signal(false);
   protected readonly visible = signal(false);
 
   private readonly initialFace = computed(() => {
@@ -46,15 +51,27 @@ export class Cube {
 
   draw(): void {
     if (this.isAnimating()) return;
+    const wasHidden = !this.visible();
     this.visible.set(true);
-    this.isAnimating.set(true);
     const drawn = Math.floor(Math.random() * 20) + 1;
     this.drawnFace.set(drawn);
-    this.spinCount.update(n => n + 1);
-    setTimeout(() => {
+    if (this.accessibility.disableCubeRotation()) {
       this.displayedFace.set(drawn);
-      this.isAnimating.set(false);
-    }, SPIN_DURATION_MS);
+    } else {
+      this.isAnimating.set(true);
+      const spin = () => {
+        this.spinCount.update(n => n + 1);
+        setTimeout(() => {
+          this.displayedFace.set(drawn);
+          this.isAnimating.set(false);
+        }, SPIN_DURATION_MS);
+      };
+      if (wasHidden) {
+        requestAnimationFrame(spin);
+      } else {
+        spin();
+      }
+    }
   }
 
   hide(): void {
