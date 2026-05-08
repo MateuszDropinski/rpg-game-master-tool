@@ -19,13 +19,13 @@ import {
 export class LibrarySidebarComponent {
   collapsed = input(false);
   collapsedChange = output<boolean>();
-  addClicked = output<void>();
+  addCharacterClicked = output<void>();
 
   toggle() {
     this.collapsedChange.emit(!this.collapsed());
   }
 
-  onAdd() {
-    this.addClicked.emit();
+  onAddCharacter() {
+    this.addCharacterClicked.emit();
   }
 }

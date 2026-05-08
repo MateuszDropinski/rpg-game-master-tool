@@ -1,0 +1,138 @@
+.dialog {
+  border: none;
+  border-radius: 12px;
+  padding: 0;
+  background: #1f2530;
+  color: #e6e8ee;
+  width: min(480px, calc(100vw - 32px));
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+  pointer-events: auto;
+}
+
+.dialog::backdrop {
+  background: rgba(8, 11, 18, 0.6);
+  backdrop-filter: blur(2px);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #c9cdd6;
+  cursor: pointer;
+}
+
+.icon-button:hover {
+  background: #2a3140;
+  color: #fff;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 8px;
+  background: #151a22;
+  border: 1px solid #353c4d;
+  border-radius: 8px;
+  color: #9aa3b2;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.card:hover {
+  background: #2a3140;
+  border-color: #4a5468;
+  color: #e6e8ee;
+}
+
+.card--selected {
+  background: #1a2a4a;
+  border-color: #4c8cff;
+  color: #fff;
+}
+
+.card__label {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  font-family: inherit;
+}
+
+.button-ghost {
+  background: transparent;
+  color: #c9cdd6;
+  border-color: #353c4d;
+}
+
+.button-ghost:hover {
+  background: #2a3140;
+  color: #fff;
+}
+
+.button-primary {
+  background: #4c8cff;
+  color: #fff;
+  border-color: #4c8cff;
+}
+
+.button-primary:hover:not(:disabled) {
+  background: #3a7dff;
+  border-color: #3a7dff;
+}
+
+.button-primary:disabled {
+  background: #2a3140;
+  border-color: #2a3140;
+  color: #6b7180;
+  cursor: not-allowed;
+}

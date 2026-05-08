@@ -1,7 +1,7 @@
 <app-library-sidebar
   [collapsed]="sidebarCollapsed()"
   (collapsedChange)="sidebarCollapsed.set($event)"
-  (addClicked)="onAddLibraryItem()"
+  (addCharacterClicked)="openAddCharacterDialog()"
 />
 
 <div class="canvas">
@@ -17,6 +17,9 @@
     [nodeTemplateMap]="nodeTemplateMap"
     [edgeTemplateMap]="edgeTemplateMap"
     [style.background]="activeBackground()"
+    (nodeDragStarted)="onNodeDragStarted($event)"
+    (selectionMoved)="onSelectionMoved($event)"
+    (nodeDragEnded)="onNodeDragEnded()"
   >
     <ng-diagram-background type="grid" />
   </ng-diagram>
@@ -25,3 +28,9 @@
     <app-cube [multiplier]="1" [value]="1" />
   </div>
 </div>
+
+<app-add-character-dialog
+  [open]="addCharacterDialogOpen()"
+  (cancel)="addCharacterDialogOpen.set(false)"
+  (submit)="onAddCharacterSubmit($event)"
+/>

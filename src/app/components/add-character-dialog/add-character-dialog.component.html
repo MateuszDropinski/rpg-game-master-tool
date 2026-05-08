@@ -1,0 +1,50 @@
+<dialog
+  #dialogEl
+  class="dialog"
+  (close)="onDialogClose()"
+  (click)="onBackdropClick($event)"
+>
+  <div class="content">
+    <header class="header">
+      <h2 class="title">Add Character</h2>
+      <button
+        type="button"
+        class="icon-button"
+        title="Close"
+        aria-label="Close"
+        (click)="onCancel()"
+      >
+        <ng-icon name="phosphorX" size="18" />
+      </button>
+    </header>
+
+    <div class="grid">
+      @for (type of characterTypes; track type.id) {
+        <button
+          type="button"
+          class="card"
+          [class.card--selected]="selected()?.id === type.id"
+          (click)="onSelect(type)"
+        >
+          <ng-icon [name]="type.icon" size="28" />
+          <span class="card__label">{{ type.label }}</span>
+        </button>
+      }
+    </div>
+
+    <footer class="footer">
+      <button type="button" class="button button-ghost" (click)="onCancel()">
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="button button-primary"
+        [disabled]="!selected()"
+        (click)="onSubmit()"
+      >
+        <ng-icon name="phosphorPlus" size="14" />
+        <span>Add character</span>
+      </button>
+    </footer>
+  </div>
+</dialog>
