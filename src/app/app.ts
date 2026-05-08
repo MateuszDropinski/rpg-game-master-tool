@@ -6,10 +6,11 @@ import {
   provideNgDiagram,
   type NgDiagramConfig,
 } from 'ng-diagram';
+import { Cube } from './cube/cube';
 
 @Component({
   selector: 'app-root',
-  imports: [NgDiagramComponent, NgDiagramBackgroundComponent],
+  imports: [NgDiagramComponent, NgDiagramBackgroundComponent, Cube],
   providers: [provideNgDiagram()],
   templateUrl: './app.html',
   styles: `
@@ -17,6 +18,7 @@ import {
       display: flex;
       height: 100%;
       width: 100%;
+      overflow: hidden;
     }
   `,
 })
