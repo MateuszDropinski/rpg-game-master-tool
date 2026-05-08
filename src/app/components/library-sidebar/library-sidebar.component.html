@@ -21,17 +21,41 @@
         aria-label="Collapse library"
         (click)="toggle()"
       >
-        <ng-icon name="phosphorCaretLeft" size="18" />
+        <ng-icon name="phosphorCaretRight" size="18" />
       </button>
     </header>
 
-    <button type="button" class="add-button" (click)="onAddCharacter()">
-      <ng-icon name="phosphorPlus" size="16" />
-      <span>Add character</span>
-    </button>
+    <section class="library-section">
+      <button type="button" class="add-button" (click)="onAddCharacter()">
+        <ng-icon name="phosphorPlus" size="16" />
+        <span>Add character</span>
+      </button>
 
-    <div class="items" aria-live="polite">
-      <p class="empty">No items yet.</p>
-    </div>
+      <div class="items" aria-live="polite">
+        <p class="empty">No items yet.</p>
+      </div>
+    </section>
+
+    <hr class="section-divider" />
+
+    <section class="notes-section">
+      <h3 class="section-title">Notes</h3>
+
+      <div class="note-list" aria-live="polite">
+        @for (note of store.notes(); track note.id) {
+          <button
+            type="button"
+            class="note-item"
+            [class.selected]="note.selected"
+            [title]="note.data.text"
+            (click)="store.selectNote(note.id)"
+          >
+            {{ note.data.text || '(empty note)' }}
+          </button>
+        } @empty {
+          <p class="empty">No notes yet — use the toolbar to place a note.</p>
+        }
+      </div>
+    </section>
   </aside>
 }

@@ -41,6 +41,7 @@ import {
   NodeCharacterComponent,
   type CharacterNodeData,
 } from './components/node-character/node-character.component';
+import { NoteNodeComponent } from './components/nodes/note-node/note-node.component';
 import { ScaleLegendComponent } from './components/scale-legend/scale-legend.component';
 import {
   DEFAULT_CELL_VALUE,
@@ -48,10 +49,12 @@ import {
   loadMapImage,
   MapEntry,
 } from './models/map.model';
+import { NOTE_NODE_TYPE } from './models/note.model';
 import { DragRulerController } from './ruler/drag-ruler.controller';
 import { RulerEdgeComponent } from './ruler/ruler-edge.component';
 import { RulerEndpointComponent } from './ruler/ruler-endpoint.component';
 import { MapScaleService } from './services/map-scale.service';
+import { NotesStore } from './state/notes.store';
 import { ToolbarComponent } from './tools/toolbar.component';
 
 const MAP_IMAGE_NODE_ID = 'map-bg';
@@ -67,6 +70,7 @@ const MAP_IMAGE_NODE_ID = 'map-bg';
     LibrarySidebarComponent,
     MapSwitcherComponent,
     NodeCharacterComponent,
+    NoteNodeComponent,
     ScaleLegendComponent,
     ToolbarComponent,
   ],
@@ -74,6 +78,7 @@ const MAP_IMAGE_NODE_ID = 'map-bg';
     provideNgDiagram(),
     provideIcons({ phosphorLock, phosphorLockOpen }),
     DragRulerController,
+    NotesStore,
   ],
   templateUrl: './app.html',
   styles: `
@@ -144,6 +149,7 @@ export class App {
     ['map-image', MapImageNodeComponent],
     ['ruler-endpoint', RulerEndpointComponent],
     ['spell-area', CircleAreaComponent],
+    [NOTE_NODE_TYPE, NoteNodeComponent],
   ]);
 
   edgeTemplateMap = new NgDiagramEdgeTemplateMap([

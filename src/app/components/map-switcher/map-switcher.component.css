@@ -7,56 +7,90 @@
   pointer-events: none;
 }
 
-.pill {
+.switcher {
   pointer-events: auto;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px;
-  background: rgba(31, 37, 48, 0.92);
-  backdrop-filter: blur(6px);
-  border: 1px solid #2a3140;
-  border-radius: 999px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  gap: var(--spacing-1);
+  padding: var(--spacing-1) var(--spacing-2);
+  background: var(--color-bg-overlay);
+  border-radius: var(--radius-md);
+  font-family: var(--font-roboto);
 }
 
-.map-button {
-  background: transparent;
-  color: #c9cdd6;
-  border: none;
-  border-radius: 999px;
-  padding: 6px 14px;
-  font-size: 13px;
-  font-family: inherit;
-  cursor: pointer;
-  white-space: nowrap;
+.locations {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
 }
 
-.map-button:hover {
-  background: #2a3140;
-  color: #fff;
-}
-
-.map-button.active {
-  background: #4c8cff;
-  color: #fff;
-}
-
+.pill,
 .add-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  border: none;
-  border-radius: 999px;
+  gap: var(--spacing-2);
+  padding: 10px var(--spacing-4);
+  border-radius: var(--radius-md);
   background: transparent;
-  color: #c9cdd6;
+  font: 500 14px/20px var(--font-roboto);
+  letter-spacing: 0.1px;
   cursor: pointer;
-  margin-left: 2px;
+  white-space: nowrap;
 }
 
-.add-button:hover {
-  background: #2a3140;
+.pill {
+  border: 1px solid var(--color-text-primary);
+  color: #fff;
+}
+
+.pill.active {
+  background: var(--color-bg-brand-subtle);
+  border-color: var(--color-border-brand);
+}
+
+.add-button {
+  border: 1px solid transparent;
+  color: var(--color-text-primary);
+}
+
+.more-wrapper {
+  position: relative;
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 100%;
+  background: var(--color-bg-overlay);
+  border: 1px solid var(--color-text-primary);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-1);
+  margin: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 10;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px var(--spacing-2);
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-text-primary);
+  font: 500 14px/20px var(--font-roboto);
+  letter-spacing: 0.1px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.08);
   color: #fff;
 }

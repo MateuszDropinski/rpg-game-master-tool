@@ -1,0 +1,41 @@
+<div class="note">
+  <div class="collapsed-face">
+    <ng-icon name="phosphorNote" size="22" />
+  </div>
+
+  <div class="expanded-face">
+    @if (editing()) {
+      <textarea
+        class="note-textarea"
+        data-no-drag="true"
+        data-no-pan="true"
+        [value]="draftText()"
+        (input)="onDraftInput($event)"
+        (blur)="save()"
+        autofocus
+      ></textarea>
+      <button
+        type="button"
+        class="note-action"
+        data-no-drag="true"
+        data-no-pan="true"
+        (click)="save()"
+      >
+        <ng-icon name="phosphorCheck" size="14" />
+        <span>Save</span>
+      </button>
+    } @else {
+      <p class="note-text">{{ node().data.text }}</p>
+      <button
+        type="button"
+        class="note-action"
+        data-no-drag="true"
+        data-no-pan="true"
+        (click)="startEdit()"
+      >
+        <ng-icon name="phosphorPencilSimple" size="14" />
+        <span>Edit</span>
+      </button>
+    }
+  </div>
+</div>
