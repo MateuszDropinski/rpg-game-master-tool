@@ -177,7 +177,10 @@ export class App {
 
   config = {
     zoom: { max: 5 },
-    zIndex: { enabled: true },
+    // elevateOnSelection: false — without this, selecting the map-image
+    // background (zOrder -1) adds selectedZIndex (10000) to it and pushes
+    // it above every other node.
+    zIndex: { enabled: true, elevateOnSelection: false },
   } satisfies NgDiagramConfig;
 
   readonly sidebarCollapsed = signal(false);
