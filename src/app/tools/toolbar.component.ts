@@ -88,6 +88,36 @@ export class ToolbarComponent {
     this.activeTool.set(null);
   }
 
+  /**
+   * Forward wheel events to whatever sits under the cursor. Without this the
+   * tool overlay swallows the event and ctrl+wheel triggers the browser's
+   * page zoom instead of ng-diagram's canvas zoom.
+   */
+  onWheel(event: WheelEvent) {
+    event.preventDefault();
+    const overlay = event.currentTarget as Element;
+    const below = document
+      .elementsFromPoint(event.clientX, event.clientY)
+      .find((el) => el !== overlay && !overlay.contains(el));
+    if (!below) return;
+    below.dispatchEvent(
+      new WheelEvent('wheel', {
+        bubbles: true,
+        cancelable: true,
+        deltaX: event.deltaX,
+        deltaY: event.deltaY,
+        deltaZ: event.deltaZ,
+        deltaMode: event.deltaMode,
+        clientX: event.clientX,
+        clientY: event.clientY,
+        ctrlKey: event.ctrlKey,
+        shiftKey: event.shiftKey,
+        altKey: event.altKey,
+        metaKey: event.metaKey,
+      }),
+    );
+  }
+
   private currentController(): Tool | null {
     return this.controllerFor(this.activeTool());
   }

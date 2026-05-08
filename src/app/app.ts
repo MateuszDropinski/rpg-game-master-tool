@@ -49,6 +49,7 @@ import {
   DEFAULT_CELL_VALUE,
   DEFAULT_UNIT,
   loadMapImage,
+  MAP_BACKGROUND,
   MapEntry,
 } from './models/map.model';
 import { NOTE_NODE_TYPE } from './models/note.model';
@@ -62,7 +63,8 @@ import { NotesStore } from './state/notes.store';
 import { PinsStore } from './state/pins.store';
 import { ToolbarComponent } from './tools/toolbar.component';
 
-const MAP_IMAGE_NODE_ID = 'map-bg';
+const MAP_IMAGE_NODE_TYPE = 'map-image';
+const mapImageNodeId = (mapId: string) => `map-bg-${mapId}`;
 
 @Component({
   selector: 'app-root',
@@ -130,7 +132,7 @@ export class App {
 
   readonly nodeTemplateMap = new NgDiagramNodeTemplateMap([
     ['character', NodeCharacterComponent],
-    ['map-image', MapImageNodeComponent],
+    [MAP_IMAGE_NODE_TYPE, MapImageNodeComponent],
     ['ruler-endpoint', RulerEndpointComponent],
     ['spell-area', CircleAreaComponent],
     [NOTE_NODE_TYPE, NoteNodeComponent],
@@ -141,39 +143,7 @@ export class App {
     ['ruler', RulerEdgeComponent],
   ]);
 
-  model = initializeModel({
-    nodes: [
-      {
-        id: 'char-1',
-        type: 'character',
-        position: { x: 80, y: 100 },
-        size: { width: 220, height: 110 },
-        data: { name: 'Aelindra', characterClass: 'Wizard', hp: 45, maxHp: 80 },
-      },
-      {
-        id: 'char-2',
-        type: 'character',
-        position: { x: 380, y: 100 },
-        size: { width: 220, height: 110 },
-        data: { name: 'Thorin', characterClass: 'Knight', hp: 90, maxHp: 100 },
-      },
-      {
-        id: 'char-3',
-        type: 'character',
-        position: { x: 80, y: 280 },
-        size: { width: 220, height: 110 },
-        data: { name: 'Sylara', characterClass: 'Rogue', hp: 65, maxHp: 85 },
-      },
-      {
-        id: 'char-4',
-        type: 'character',
-        position: { x: 380, y: 280 },
-        size: { width: 220, height: 110 },
-        data: { name: 'Brother Aldric', characterClass: 'Cleric', hp: 30, maxHp: 70 },
-      },
-    ],
-    edges: [],
-  });
+  model = initializeModel({ nodes: [], edges: [] });
 
   config = {
     zoom: { max: 5 },
@@ -190,19 +160,30 @@ export class App {
   readonly activeMapId = this.mapsStore.activeMapId;
   readonly activeMap = this.mapsStore.activeMap;
 
-  /** Solid color shown on the diagram host (letterbox bands + color-only maps). */
-  readonly activeBackground = computed(
-    () => this.activeMap()?.background ?? '#222',
-  );
+  readonly background = MAP_BACKGROUND;
+
+  /**
+   * The map whose nodes/edges/viewport currently sit in the live diagram model.
+   * Lets us snapshot it back into `maps` before swapping in a different map.
+   * `null` until the first sync runs.
+   */
+  private syncedMapId: string | null = null;
 
   constructor() {
-    // Sync the map-image node with the active map. Only re-runs on id change
-    // (not on every imageNode field update — those flow the other direction).
-    // Gated on isInitialized so the first run waits for ngDiagram bootstrap.
+    // Save the previous map's state and apply the active map's saved state on
+    // every id change. Also handles the initial bootstrap (syncedMapId starts
+    // null, so nothing is saved on the first run). Gated on isInitialized so
+    // the first run waits for ngDiagram bootstrap.
     effect(() => {
       if (!this.diagramService.isInitialized()) return;
       const id = this.activeMapId();
-      untracked(() => this.syncMapImageNode(id));
+      untracked(() => {
+        if (this.syncedMapId && this.syncedMapId !== id) {
+          this.saveMapState(this.syncedMapId);
+        }
+        this.syncedMapId = id;
+        void this.applyMapState(id);
+      });
     });
 
     // Swap notes and pins in/out of the diagram on map switch so each map
@@ -268,20 +249,21 @@ export class App {
     const locked = !map.imageLocked;
     this.updateActiveMap({ imageLocked: locked });
 
-    const existing = this.modelService.getNodeById(MAP_IMAGE_NODE_ID);
+    const imageId = mapImageNodeId(map.id);
+    const existing = this.modelService.getNodeById(imageId);
     if (!existing) return;
-    this.modelService.updateNode(MAP_IMAGE_NODE_ID, {
+    this.modelService.updateNode(imageId, {
       draggable: !locked,
       resizable: !locked,
       rotatable: !locked,
       ...(locked ? { selected: false } : {}),
     });
-    this.modelService.updateNodeData<MapImageNodeData>(MAP_IMAGE_NODE_ID, {
+    this.modelService.updateNodeData<MapImageNodeData>(imageId, {
       imageUrl: map.imageUrl,
       locked,
     });
     if (locked) {
-      this.selectionService.deselect([MAP_IMAGE_NODE_ID]);
+      this.selectionService.deselect([imageId]);
     }
   }
 
@@ -340,7 +322,8 @@ export class App {
 
   /** Persist map-image node movement / resize / rotation back to the active map. */
   private persistMapImageNodeState() {
-    const node = this.modelService.getNodeById(MAP_IMAGE_NODE_ID);
+    const id = this.activeMapId();
+    const node = this.modelService.getNodeById(mapImageNodeId(id));
     if (!node || !node.size) return;
     this.updateActiveMap({
       imageNode: {
@@ -355,20 +338,73 @@ export class App {
     this.mapsStore.updateActiveMap(patch);
   }
 
-  private async syncMapImageNode(id: string) {
-    const map = this.maps().find((m) => m.id === id) ?? null;
-    const existing = this.modelService.getNodeById(MAP_IMAGE_NODE_ID);
+  /** Snapshot the live diagram model + viewport into the given map entry. */
+  private saveMapState(id: string) {
+    const nodes = this.modelService
+      .nodes()
+      .filter((n) => n.type !== MAP_IMAGE_NODE_TYPE)
+      .map((n) => ({ ...n }));
+    const edges = this.modelService.edges().map((e) => ({ ...e }));
+    const viewport = { ...this.viewportService.viewport() };
+    this.maps.update((list) =>
+      list.map((m) => (m.id === id ? { ...m, nodes, edges, viewport } : m)),
+    );
+  }
 
-    if (!map?.imageUrl || !map.width || !map.height) {
-      if (existing) this.modelService.deleteNodes([MAP_IMAGE_NODE_ID]);
-      return;
+  /** Replace the live diagram contents with the given map's saved state. */
+  private async applyMapState(id: string) {
+    const map = this.maps().find((m) => m.id === id) ?? null;
+    const imageNode = this.buildMapImageNode(map);
+    const savedNodes = map?.nodes ?? [];
+    const savedEdges = map?.edges ?? [];
+    const targetNodes: Node[] = imageNode
+      ? [imageNode, ...savedNodes]
+      : [...savedNodes];
+
+    // Two sequential transactions: a single delete-then-readd-same-id inside
+    // one transaction silently drops the delete in ng-diagram, leaving stale
+    // nodes behind.
+    const existingIds = this.modelService.nodes().map((n) => n.id);
+    const existingEdgeIds = this.modelService.edges().map((e) => e.id);
+    if (existingIds.length > 0 || existingEdgeIds.length > 0) {
+      await this.diagramService.transaction(() => {
+        if (existingIds.length > 0) this.modelService.deleteNodes(existingIds);
+        if (existingEdgeIds.length > 0)
+          this.modelService.deleteEdges(existingEdgeIds);
+      });
     }
 
+    if (targetNodes.length > 0 || savedEdges.length > 0) {
+      await this.diagramService.transaction(
+        () => {
+          if (targetNodes.length > 0) this.modelService.addNodes(targetNodes);
+          if (savedEdges.length > 0)
+            this.modelService.addEdges([...savedEdges]);
+        },
+        { waitForMeasurements: true },
+      );
+    }
+
+    if (map?.viewport) {
+      const v = map.viewport;
+      this.viewportService.setViewport(v.x, v.y, v.scale);
+    } else if (imageNode) {
+      this.viewportService.zoomToFit({
+        nodeIds: [imageNode.id],
+        padding: 24,
+      });
+    } else {
+      this.viewportService.setViewport(0, 0, 1);
+    }
+  }
+
+  private buildMapImageNode(map: MapEntry | null): Node<MapImageNodeData> | null {
+    if (!map?.imageUrl || !map.width || !map.height) return null;
     const state = map.imageNode;
     const locked = !!map.imageLocked;
-    const newNode: Node<MapImageNodeData> = {
-      id: MAP_IMAGE_NODE_ID,
-      type: 'map-image',
+    return {
+      id: mapImageNodeId(map.id),
+      type: MAP_IMAGE_NODE_TYPE,
       position: state?.position ?? { x: 0, y: 0 },
       size: state?.size ?? { width: map.width, height: map.height },
       angle: state?.angle ?? 0,
@@ -379,21 +415,5 @@ export class App {
       zOrder: -1,
       data: { imageUrl: map.imageUrl, locked },
     };
-
-    await this.diagramService.transaction(
-      () => {
-        if (existing) this.modelService.deleteNodes([MAP_IMAGE_NODE_ID]);
-        this.modelService.addNodes([newNode]);
-      },
-      { waitForMeasurements: true },
-    );
-
-    // Always fit the image on map switch — calibration (size/position/angle)
-    // is preserved on the node, but the viewport resets to a clean "show me
-    // this map" baseline that the user can pan/zoom from.
-    this.viewportService.zoomToFit({
-      nodeIds: [MAP_IMAGE_NODE_ID],
-      padding: 24,
-    });
   }
 }
