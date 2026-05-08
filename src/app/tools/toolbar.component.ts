@@ -1,14 +1,24 @@
-import { ChangeDetectionStrategy, Component, inject, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
-  phosphorAsterisk,
   phosphorChatCentered,
+  phosphorCircleDashed,
   phosphorMapPinLine,
   phosphorRuler,
   phosphorUser,
 } from '@ng-icons/phosphor-icons/regular';
-import { NgDiagramViewportService } from 'ng-diagram';
+import {
+  NgDiagramPaletteItemComponent,
+  NgDiagramViewportService,
+  type NgDiagramPaletteItem,
+} from 'ng-diagram';
 
+import {
+  CHARACTER_NODE_TYPE,
+  CHARACTER_TYPES,
+  type CharacterNodeData,
+  type CharacterType,
+} from '../models/character.model';
 import { CircleController } from '../circle/circle.controller';
 import { RulerController } from '../ruler/ruler.controller';
 import { NoteToolController } from './note-tool.controller';
@@ -17,9 +27,14 @@ import type { Tool } from './tool';
 
 type ToolName = 'ruler' | 'circle' | 'note' | 'pin';
 
+type CharacterPaletteEntry = {
+  type: CharacterType;
+  item: NgDiagramPaletteItem<CharacterNodeData>;
+};
+
 @Component({
   selector: 'app-toolbar',
-  imports: [NgIcon],
+  imports: [NgIcon, NgDiagramPaletteItemComponent],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',
   providers: [
@@ -29,7 +44,7 @@ type ToolName = 'ruler' | 'circle' | 'note' | 'pin';
     PinToolController,
     provideIcons({
       phosphorRuler,
-      phosphorAsterisk,
+      phosphorCircleDashed,
       phosphorChatCentered,
       phosphorMapPinLine,
       phosphorUser,
@@ -44,10 +59,32 @@ export class ToolbarComponent {
   private note = inject(NoteToolController);
   private pin = inject(PinToolController);
 
-  readonly addCharacterClicked = output<void>();
+  protected readonly characterEntries = computed<CharacterPaletteEntry[]>(() =>
+    CHARACTER_TYPES.map((type) => ({
+      type,
+      item: {
+        type: CHARACTER_NODE_TYPE,
+        data: {
+          label: type.label,
+          characterClass: type.label,
+        },
+        // 2x2 grid cells at the default 50px cellPx. autoSize must be false,
+        // otherwise ng-diagram measures the portrait's natural pixel dimensions
+        // and the node becomes huge.
+        size: { width: 100, height: 100 },
+        autoSize: false,
+        resizable: true,
+      },
+    })),
+  );
 
   activeTool = signal<ToolName | null>(null);
+  characterFlyoutOpen = signal(false);
   private dragging = false;
+
+  toggleCharacterFlyout() {
+    this.characterFlyoutOpen.update((open) => !open);
+  }
 
   toggle(name: ToolName) {
     const current = this.activeTool();

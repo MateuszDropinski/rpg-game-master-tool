@@ -63,6 +63,95 @@
   }
 }
 
+.character-flyout {
+  position: absolute;
+  top: 0;
+  left: calc(100% + 8px);
+  width: 480px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2, 8px);
+  padding: var(--spacing-2, 8px) 12px 12px;
+  background: var(--color-bg-overlay, #292735);
+  color: var(--color-text-primary, #e5e2f1);
+  border-radius: var(--radius-sm, 8px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  font-family: var(--font-roboto, system-ui);
+}
+
+.character-flyout__header {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary, #cac5db);
+  padding-top: 4px;
+  flex: 0 0 auto;
+}
+
+.character-flyout__grid {
+  display: grid;
+  // minmax(0, 1fr) instead of 1fr so a single wide label (e.g. "Barbarian")
+  // can't push its column past its equal share.
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--spacing-2, 8px);
+}
+
+.character-flyout__item {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+
+  // ng-diagram-palette-item internally wraps <ng-content> in a `<div class="draggable">`.
+  // Without an explicit width that div shrinks to content min-width, which differs per
+  // image and makes columns uneven — pin it to fill its cell and host the visual styling.
+  ::ng-deep .draggable {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: var(--spacing-2, 8px);
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-sm, 8px);
+    cursor: grab;
+    user-select: none;
+    width: 100%;
+    box-sizing: border-box;
+    transition: background 0.15s, border-color 0.15s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+}
+
+.character-flyout__image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  border-radius: var(--radius-xs, 4px);
+  display: block;
+  pointer-events: none;
+}
+
+.character-flyout__label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-primary, #e5e2f1);
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .overlay {
   position: absolute;
   inset: 0;

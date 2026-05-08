@@ -19,15 +19,13 @@ import {
   type NgDiagramConfig,
   type Node,
   type NodeDragStartedEvent,
+  type PaletteItemDroppedEvent,
   type SelectionMovedEvent,
 } from 'ng-diagram';
 
 import { CircleAreaComponent } from './circle/circle-area.component';
+import { AddCharacterDialogComponent } from './components/add-character-dialog/add-character-dialog.component';
 import { Cube } from './components/cube/cube';
-import {
-  AddCharacterDialogComponent,
-  type CharacterType,
-} from './components/add-character-dialog/add-character-dialog.component';
 import { GridOverlayComponent } from './components/grid-overlay/grid-overlay.component';
 import { LockMapImageToggleComponent } from './components/lock-map-image-toggle/lock-map-image-toggle.component';
 import { LibrarySidebarComponent } from './components/library-sidebar/library-sidebar.component';
@@ -37,14 +35,16 @@ import {
 } from './components/map-image-node/map-image-node.component';
 import { MapSwitcherComponent } from './components/map-switcher/map-switcher.component';
 import { MotionToggleComponent } from './components/motion-toggle/motion-toggle.component';
+import { NodeCharacterComponent } from './components/node-character/node-character.component';
 import { RollDiceButtonComponent } from './components/roll-dice-button/roll-dice-button.component';
-import {
-  NodeCharacterComponent,
-  type CharacterNodeData,
-} from './components/node-character/node-character.component';
 import { NoteNodeComponent } from './components/nodes/note-node/note-node.component';
 import { PinNodeComponent } from './components/nodes/pin-node/pin-node.component';
 import { ScaleLegendComponent } from './components/scale-legend/scale-legend.component';
+import {
+  CHARACTER_NODE_TYPE,
+  type CharacterNodeData,
+  type CharacterType,
+} from './models/character.model';
 import {
   DEFAULT_CELL_VALUE,
   DEFAULT_UNIT,
@@ -131,7 +131,7 @@ export class App {
   private readonly pinsStore = inject(PinsStore);
 
   readonly nodeTemplateMap = new NgDiagramNodeTemplateMap([
-    ['character', NodeCharacterComponent],
+    [CHARACTER_NODE_TYPE, NodeCharacterComponent],
     [MAP_IMAGE_NODE_TYPE, MapImageNodeComponent],
     ['ruler-endpoint', RulerEndpointComponent],
     ['spell-area', CircleAreaComponent],
@@ -295,28 +295,48 @@ export class App {
     this.persistMapImageNodeState();
   }
 
+  onPaletteItemDropped(event: PaletteItemDroppedEvent) {
+    if (event.node.type !== CHARACTER_NODE_TYPE) return;
+    const data = event.node.data as CharacterNodeData;
+    const className = data.characterClass;
+    const sameClass = this.modelService
+      .nodes()
+      .filter(
+        (n) =>
+          n.id !== event.node.id &&
+          (n.data as CharacterNodeData)?.characterClass === className,
+      );
+    if (sameClass.length === 0) return;
+    this.modelService.updateNodeData<CharacterNodeData>(event.node.id, {
+      ...data,
+      label: `${className} ${sameClass.length + 1}`,
+    });
+  }
+
   openAddCharacterDialog() {
     this.addCharacterDialogOpen.set(true);
   }
 
   onAddCharacterSubmit(type: CharacterType) {
     this.addCharacterDialogOpen.set(false);
-    const existing = this.model
-      .getNodes()
-      .filter((n) => (n.data as CharacterNodeData)?.characterClass === type.label);
-    const index = existing.length + 1;
-    const name = index === 1 ? type.label : `${type.label} ${index}`;
+    const className = type.label;
+    const sameClass = this.modelService
+      .nodes()
+      .filter((n) => (n.data as CharacterNodeData)?.characterClass === className);
+    const label =
+      sameClass.length === 0 ? className : `${className} ${sameClass.length + 1}`;
     const x = 80 + Math.floor(Math.random() * 500);
     const y = 100 + Math.floor(Math.random() * 400);
-    this.model.updateNodes((nodes) => [
-      ...nodes,
+    this.modelService.addNodes([
       {
         id: `char-${crypto.randomUUID()}`,
-        type: 'character',
+        type: CHARACTER_NODE_TYPE,
         position: { x, y },
-        size: { width: 220, height: 110 },
-        data: { name, characterClass: type.label, hp: type.hp, maxHp: type.hp },
-      } as Node,
+        size: { width: 100, height: 100 },
+        autoSize: false,
+        resizable: true,
+        data: { label, characterClass: className },
+      } as Node<CharacterNodeData>,
     ]);
   }
 

@@ -3,9 +3,11 @@
     <button
       type="button"
       class="toolbar__button"
-      title="Add character"
+      [class.toolbar__button--active]="characterFlyoutOpen()"
+      [attr.aria-pressed]="characterFlyoutOpen()"
+      title="Add character — drag onto the map"
       aria-label="Add character"
-      (click)="addCharacterClicked.emit()"
+      (click)="toggleCharacterFlyout()"
     >
       <ng-icon name="phosphorUser" size="16" />
     </button>
@@ -20,6 +22,11 @@
     >
       <ng-icon name="phosphorMapPinLine" size="16" />
     </button>
+  </div>
+
+  <div class="toolbar__divider" role="separator"></div>
+
+  <div class="toolbar__group">
     <button
       type="button"
       class="toolbar__button"
@@ -48,9 +55,32 @@
       title="Spell area — drag to set radius"
       (click)="toggle('circle')"
     >
-      <ng-icon name="phosphorAsterisk" size="16" />
+      <ng-icon name="phosphorCircleDashed" size="16" />
     </button>
   </div>
+
+  @if (characterFlyoutOpen()) {
+    <div class="character-flyout" role="dialog" aria-label="Characters">
+      <div class="character-flyout__header">Characters</div>
+      <div class="character-flyout__grid">
+        @for (entry of characterEntries(); track entry.type.id) {
+          <ng-diagram-palette-item
+            class="character-flyout__item"
+            [item]="entry.item"
+            [title]="'Drag ' + entry.type.label + ' to the map'"
+          >
+            <img
+              class="character-flyout__image"
+              [src]="entry.type.imageUrl"
+              [alt]="entry.type.label"
+              draggable="false"
+            />
+            <span class="character-flyout__label">{{ entry.type.label }}</span>
+          </ng-diagram-palette-item>
+        }
+      </div>
+    </div>
+  }
 </nav>
 
 @if (activeTool()) {

@@ -26,7 +26,12 @@
           [class.card--selected]="selected()?.id === type.id"
           (click)="onSelect(type)"
         >
-          <ng-icon [name]="type.icon" size="28" />
+          <img
+            class="card__image"
+            [src]="type.imageUrl"
+            [alt]="type.label"
+            draggable="false"
+          />
           <span class="card__label">{{ type.label }}</span>
         </button>
       }
