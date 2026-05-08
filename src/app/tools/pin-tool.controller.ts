@@ -5,32 +5,31 @@ import {
   type Point,
 } from 'ng-diagram';
 
-import { NOTE_COLLAPSED_SIZE, NOTE_NODE_TYPE, type NoteData } from '../models/note.model';
+import { PIN_NODE_TYPE, PIN_SIZE, type PinData } from '../models/pin.model';
 import { MapsStore } from '../state/maps.store';
 import type { Tool } from './tool';
 
 @Injectable()
-export class NoteToolController implements Tool {
+export class PinToolController implements Tool {
   private readonly model = inject(NgDiagramModelService);
   private readonly selection = inject(NgDiagramSelectionService);
   private readonly mapsStore = inject(MapsStore);
 
   start(point: Point): void {
-    const id = `note-${crypto.randomUUID()}`;
+    const id = `pin-${crypto.randomUUID()}`;
     this.model.addNodes([
       {
         id,
-        type: NOTE_NODE_TYPE,
+        type: PIN_NODE_TYPE,
         position: {
-          x: point.x - NOTE_COLLAPSED_SIZE.width / 2,
-          y: point.y - NOTE_COLLAPSED_SIZE.height / 2,
+          x: point.x - PIN_SIZE.width / 2,
+          y: point.y - PIN_SIZE.height / 2,
         },
-        size: { ...NOTE_COLLAPSED_SIZE },
+        size: { ...PIN_SIZE },
         data: {
-          label: 'Note',
-          text: '',
+          label: 'Pin',
           mapId: this.mapsStore.activeMapId(),
-        } satisfies NoteData,
+        } satisfies PinData,
         autoSize: false,
       },
     ]);
