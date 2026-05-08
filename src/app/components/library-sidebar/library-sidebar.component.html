@@ -25,13 +25,50 @@
       </button>
     </header>
 
-    <button type="button" class="add-button" (click)="onAddCharacter()">
-      <ng-icon name="phosphorPlus" size="16" />
-      <span>Add character</span>
-    </button>
+    <section class="library-section">
+      <button type="button" class="add-button" (click)="onAddCharacter()">
+        <ng-icon name="phosphorPlus" size="16" />
+        <span>Add character</span>
+      </button>
 
-    <div class="items" aria-live="polite">
-      <p class="empty">No items yet.</p>
-    </div>
+      <div class="items" aria-live="polite">
+        <p class="empty">No items yet.</p>
+      </div>
+    </section>
+
+    <hr class="section-divider" />
+
+    <section class="notes-section">
+      <h3 class="section-title">Notes</h3>
+
+      <ng-diagram-palette-item [item]="store.paletteItem">
+        <div class="palette-note">
+          <ng-icon name="phosphorNote" size="16" />
+          <span>Note</span>
+        </div>
+        <ng-diagram-palette-item-preview>
+          <div class="palette-note palette-note--preview">
+            <ng-icon name="phosphorNote" size="16" />
+            <span>Note</span>
+          </div>
+        </ng-diagram-palette-item-preview>
+      </ng-diagram-palette-item>
+
+      <div class="note-list" aria-live="polite">
+        @for (note of store.notes(); track note.id) {
+          <button
+            type="button"
+            class="note-item"
+            [class.selected]="note.selected"
+            [title]="note.data.text"
+            (click)="store.selectNote(note.id)"
+          >
+            {{ note.data.text || '(empty note)' }}
+          </button>
+        } @empty {
+          <p class="empty">No notes yet — drag the Note item onto the map.</p>
+        }
+      </div>
+    </section>
   </aside>
 }
