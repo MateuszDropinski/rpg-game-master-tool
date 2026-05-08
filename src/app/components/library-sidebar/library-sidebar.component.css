@@ -1,20 +1,22 @@
 :host {
-  display: flex;
-  height: 100%;
-  flex: 0 0 auto;
+  display: contents;
   font-family: var(--font-roboto);
 }
 
 .panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 12;
   display: flex;
   flex-direction: column;
-  width: 240px;
-  height: 100%;
+  width: 320px;
   background: var(--color-bg-overlay);
   color: var(--color-text-primary);
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 12px;
-  gap: 12px;
+  border-top-left-radius: var(--radius-md);
+  border-bottom-left-radius: var(--radius-md);
+  padding: 0 0 24px;
   box-sizing: border-box;
   overflow-y: auto;
 }
@@ -22,28 +24,56 @@
 .panel-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--spacing-2);
+  gap: 10px;
+  padding: var(--spacing-2);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.panel-title {
+  margin: 0;
+  font: 400 14px/24px var(--font-roboto);
+  color: #fff;
 }
 
 .tab-bar {
   display: flex;
-  flex: 1 1 auto;
-  gap: 2px;
-  padding: 2px;
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-sm);
+  width: 100%;
+  border-top: 1px solid var(--color-border-default);
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.tab-btn {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  background: transparent;
+  border: none;
+  color: var(--color-text-primary);
+  font: 500 14px/20px var(--font-roboto);
+  letter-spacing: 0.1px;
+  cursor: pointer;
+}
+
+.tab-btn:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.tab-btn.active {
+  background: var(--color-bg-brand-subtle);
 }
 
 .icon-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
+  padding: var(--spacing-2);
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-xs);
   background: transparent;
   color: var(--color-text-secondary);
   cursor: pointer;
@@ -59,6 +89,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-4);
 }
 
 .add-button {
@@ -158,38 +189,39 @@
   display: block;
   width: 100%;
   text-align: left;
-  padding: 6px var(--spacing-2);
-  background: rgba(0, 0, 0, 0.2);
+  padding: var(--spacing-4);
+  background: transparent;
   color: var(--color-text-primary);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-xs);
-  font: 500 12px/16px var(--font-roboto);
+  border: none;
+  border-radius: var(--radius-sm);
+  font: 400 16px/24px var(--font-roboto);
   cursor: pointer;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
 }
 
 .note-item:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .note-item.selected {
   background: var(--color-bg-brand-subtle);
-  border-color: var(--color-border-brand);
   color: #fff;
 }
 
 .rail {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 12;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 44px;
-  height: 100%;
   background: var(--color-bg-overlay);
   color: var(--color-text-secondary);
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-top-left-radius: var(--radius-md);
+  border-bottom-left-radius: var(--radius-md);
   padding: var(--spacing-2) 0;
   gap: 12px;
   box-sizing: border-box;
