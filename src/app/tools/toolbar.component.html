@@ -1,0 +1,32 @@
+<div class="toolbar">
+  <button
+    type="button"
+    class="toolbar__button"
+    [class.toolbar__button--active]="activeTool() === 'ruler'"
+    [attr.aria-pressed]="activeTool() === 'ruler'"
+    title="Ruler — measure distance"
+    (click)="toggle('ruler')"
+  >
+    <ng-icon name="phosphorRuler" size="22" />
+  </button>
+  <button
+    type="button"
+    class="toolbar__button"
+    [class.toolbar__button--active]="activeTool() === 'circle'"
+    [attr.aria-pressed]="activeTool() === 'circle'"
+    title="Spell area — measure radius"
+    (click)="toggle('circle')"
+  >
+    <ng-icon name="phosphorCircleDashed" size="22" />
+  </button>
+</div>
+
+@if (activeTool()) {
+  <div
+    class="overlay"
+    (pointerdown)="onPointerDown($event)"
+    (pointermove)="onPointerMove($event)"
+    (pointerup)="onPointerUp()"
+    (pointercancel)="onPointerUp()"
+  ></div>
+}

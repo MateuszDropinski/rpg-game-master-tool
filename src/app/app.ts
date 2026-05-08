@@ -3,13 +3,20 @@ import {
   initializeModel,
   NgDiagramBackgroundComponent,
   NgDiagramComponent,
+  NgDiagramEdgeTemplateMap,
+  NgDiagramNodeTemplateMap,
   provideNgDiagram,
   type NgDiagramConfig,
 } from 'ng-diagram';
+
+import { CircleAreaComponent } from './circle/circle-area.component';
 import { Cube } from './cube/cube';
 import { LibrarySidebarComponent } from './components/library-sidebar/library-sidebar.component';
 import { MapSwitcherComponent } from './components/map-switcher/map-switcher.component';
 import { mapBackgroundFromFile, MapEntry } from './models/map.model';
+import { RulerEdgeComponent } from './ruler/ruler-edge.component';
+import { RulerEndpointComponent } from './ruler/ruler-endpoint.component';
+import { ToolbarComponent } from './tools/toolbar.component';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +26,7 @@ import { mapBackgroundFromFile, MapEntry } from './models/map.model';
     Cube,
     LibrarySidebarComponent,
     MapSwitcherComponent,
+    ToolbarComponent,
   ],
   providers: [provideNgDiagram()],
   templateUrl: './app.html',
@@ -49,6 +57,15 @@ export class App {
   config = {
     background: { cellSize: { width: 20, height: 20 } },
   } satisfies NgDiagramConfig;
+
+  nodeTemplateMap = new NgDiagramNodeTemplateMap([
+    ['ruler-endpoint', RulerEndpointComponent],
+    ['spell-area', CircleAreaComponent],
+  ]);
+
+  edgeTemplateMap = new NgDiagramEdgeTemplateMap([
+    ['ruler', RulerEdgeComponent],
+  ]);
 
   readonly sidebarCollapsed = signal(false);
 
