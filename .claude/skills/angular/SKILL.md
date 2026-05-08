@@ -48,3 +48,15 @@ Create a dedicated diagram component at `src/app/components/diagram/diagram.comp
 All Angular components must live under `src/app/components/`, each in its own subdirectory named after the component (e.g. `src/app/components/node-character/`).
 
 Never place a component directly in `src/app/` or any other directory outside `src/app/components/`.
+
+## State
+
+All state files must live under `src/app/core/state/`, named `<name>.store.ts` (e.g. `src/app/core/state/notes.store.ts`).
+
+Never place store files directly in `src/app/state/`.
+
+## Services
+
+All Angular services must live under `src/app/core/services/`, named `<name>.service.ts` (e.g. `src/app/core/services/notes.service.ts`).
+
+Never place service files directly in `src/app/services`.
