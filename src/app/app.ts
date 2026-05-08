@@ -6,8 +6,6 @@ import {
   signal,
   untracked,
 } from '@angular/core';
-import { NgIcon, provideIcons } from '@ng-icons/core';
-import { phosphorLock, phosphorLockOpen } from '@ng-icons/phosphor-icons/regular';
 import {
   initializeModel,
   NgDiagramComponent,
@@ -31,6 +29,7 @@ import {
   type CharacterType,
 } from './components/add-character-dialog/add-character-dialog.component';
 import { GridOverlayComponent } from './components/grid-overlay/grid-overlay.component';
+import { LockMapImageToggleComponent } from './components/lock-map-image-toggle/lock-map-image-toggle.component';
 import { LibrarySidebarComponent } from './components/library-sidebar/library-sidebar.component';
 import {
   MapImageNodeComponent,
@@ -65,22 +64,19 @@ const MAP_IMAGE_NODE_ID = 'map-bg';
   selector: 'app-root',
   imports: [
     NgDiagramComponent,
-    NgIcon,
     Cube,
     AddCharacterDialogComponent,
     GridOverlayComponent,
     LibrarySidebarComponent,
+    LockMapImageToggleComponent,
     MapSwitcherComponent,
     MotionToggleComponent,
-    NodeCharacterComponent,
     RollDiceButtonComponent,
-    NoteNodeComponent,
     ScaleLegendComponent,
     ToolbarComponent,
   ],
   providers: [
     provideNgDiagram(),
-    provideIcons({ phosphorLock, phosphorLockOpen }),
     DragRulerController,
     NotesStore,
   ],
@@ -110,33 +106,6 @@ const MAP_IMAGE_NODE_ID = 'map-bg';
     ng-diagram {
       flex: 1 1 auto;
       min-width: 0;
-    }
-
-    .lock-btn {
-      position: absolute;
-      bottom: 80px;
-      left: 24px;
-      z-index: 10;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      background: rgba(20, 20, 24, 0.78);
-      color: #f0f0f5;
-      font: 13px/1.2 system-ui, sans-serif;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(6px);
-    }
-
-    .lock-btn:hover {
-      border-color: rgba(255, 255, 255, 0.4);
-    }
-
-    .lock-btn--locked {
-      color: #ffd76a;
     }
   `,
 })

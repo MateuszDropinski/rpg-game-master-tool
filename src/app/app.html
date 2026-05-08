@@ -26,20 +26,10 @@
   <app-toolbar (addCharacterClicked)="openAddCharacterDialog()" />
   @if (activeMap(); as map) {
     @if (map.imageUrl) {
-      <button
-        type="button"
-        class="lock-btn"
-        [class.lock-btn--locked]="map.imageLocked"
-        [title]="map.imageLocked ? 'Unlock map image' : 'Lock map image'"
-        [attr.aria-pressed]="!!map.imageLocked"
-        (click)="toggleImageLock()"
-      >
-        <ng-icon
-          [name]="map.imageLocked ? 'phosphorLock' : 'phosphorLockOpen'"
-          size="16"
-        />
-        <span>{{ map.imageLocked ? 'Locked' : 'Unlocked' }}</span>
-      </button>
+      <app-lock-map-image-toggle
+        [locked]="!!map.imageLocked"
+        (toggleLock)="toggleImageLock()"
+      />
     }
     <app-scale-legend
       [cellValue]="map.cellValue"
