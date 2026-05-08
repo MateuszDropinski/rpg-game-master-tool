@@ -43,6 +43,7 @@ import {
   type CharacterNodeData,
 } from './components/node-character/node-character.component';
 import { NoteNodeComponent } from './components/nodes/note-node/note-node.component';
+import { PinNodeComponent } from './components/nodes/pin-node/pin-node.component';
 import { ScaleLegendComponent } from './components/scale-legend/scale-legend.component';
 import {
   DEFAULT_CELL_VALUE,
@@ -51,11 +52,14 @@ import {
   MapEntry,
 } from './models/map.model';
 import { NOTE_NODE_TYPE } from './models/note.model';
+import { PIN_NODE_TYPE } from './models/pin.model';
 import { DragRulerController } from './ruler/drag-ruler.controller';
 import { RulerEdgeComponent } from './ruler/ruler-edge.component';
 import { RulerEndpointComponent } from './ruler/ruler-endpoint.component';
 import { MapScaleService } from './services/map-scale.service';
+import { MapsStore } from './state/maps.store';
 import { NotesStore } from './state/notes.store';
+import { PinsStore } from './state/pins.store';
 import { ToolbarComponent } from './tools/toolbar.component';
 
 const MAP_IMAGE_NODE_ID = 'map-bg';
@@ -71,6 +75,9 @@ const MAP_IMAGE_NODE_ID = 'map-bg';
     LockMapImageToggleComponent,
     MapSwitcherComponent,
     MotionToggleComponent,
+    NodeCharacterComponent,
+    NoteNodeComponent,
+    PinNodeComponent,
     RollDiceButtonComponent,
     ScaleLegendComponent,
     ToolbarComponent,
@@ -79,6 +86,7 @@ const MAP_IMAGE_NODE_ID = 'map-bg';
     provideNgDiagram(),
     DragRulerController,
     NotesStore,
+    PinsStore,
   ],
   templateUrl: './app.html',
   styles: `
@@ -116,6 +124,9 @@ export class App {
   private readonly selectionService = inject(NgDiagramSelectionService);
   private readonly scaleService = inject(MapScaleService);
   private readonly dragRuler = inject(DragRulerController);
+  private readonly mapsStore = inject(MapsStore);
+  private readonly notesStore = inject(NotesStore);
+  private readonly pinsStore = inject(PinsStore);
 
   readonly nodeTemplateMap = new NgDiagramNodeTemplateMap([
     ['character', NodeCharacterComponent],
@@ -123,6 +134,7 @@ export class App {
     ['ruler-endpoint', RulerEndpointComponent],
     ['spell-area', CircleAreaComponent],
     [NOTE_NODE_TYPE, NoteNodeComponent],
+    [PIN_NODE_TYPE, PinNodeComponent],
   ]);
 
   edgeTemplateMap = new NgDiagramEdgeTemplateMap([
@@ -171,31 +183,9 @@ export class App {
   readonly sidebarCollapsed = signal(false);
   readonly addCharacterDialogOpen = signal(false);
 
-  readonly maps = signal<MapEntry[]>([
-    {
-      id: 'map-1',
-      name: 'Map 1',
-      background: '#1a1a1a',
-      imageUrl: 'world%20map%203.jpeg',
-      width: 1800,
-      height: 1350,
-      cellValue: DEFAULT_CELL_VALUE,
-      unit: DEFAULT_UNIT,
-    },
-    {
-      id: 'map-2',
-      name: 'Map 2',
-      background: '#5d3a1a',
-      cellValue: DEFAULT_CELL_VALUE,
-      unit: DEFAULT_UNIT,
-    },
-  ]);
-
-  readonly activeMapId = signal('map-1');
-
-  readonly activeMap = computed(
-    () => this.maps().find((m) => m.id === this.activeMapId()) ?? null,
-  );
+  readonly maps = this.mapsStore.maps;
+  readonly activeMapId = this.mapsStore.activeMapId;
+  readonly activeMap = this.mapsStore.activeMap;
 
   /** Solid color shown on the diagram host (letterbox bands + color-only maps). */
   readonly activeBackground = computed(
@@ -212,6 +202,22 @@ export class App {
       untracked(() => this.syncMapImageNode(id));
     });
 
+    // Swap notes and pins in/out of the diagram on map switch so each map
+    // shows only its own. Items for the previous map are archived in their
+    // respective stores.
+    let prevMapId = this.activeMapId();
+    effect(() => {
+      if (!this.diagramService.isInitialized()) return;
+      const next = this.activeMapId();
+      if (next === prevMapId) return;
+      const prev = prevMapId;
+      prevMapId = next;
+      untracked(() => {
+        this.notesStore.swapActiveMap(prev, next);
+        this.pinsStore.swapActiveMap(prev, next);
+      });
+    });
+
     // Mirror the active map's scale into the service the rulers/circles read.
     effect(() => {
       const map = this.activeMap();
@@ -222,7 +228,7 @@ export class App {
   }
 
   setActiveMap(id: string) {
-    this.activeMapId.set(id);
+    this.mapsStore.setActiveMap(id);
   }
 
   async addMap({ name, file }: { name: string; file: File }) {
@@ -233,21 +239,16 @@ export class App {
       console.error('Failed to load map image', err);
       return;
     }
-    const id = `map-${crypto.randomUUID()}`;
-    this.maps.update((list) => [
-      ...list,
-      {
-        id,
-        name,
-        background: '#1a1a1a',
-        imageUrl: loaded.objectUrl,
-        width: loaded.width,
-        height: loaded.height,
-        cellValue: DEFAULT_CELL_VALUE,
-        unit: DEFAULT_UNIT,
-      },
-    ]);
-    this.activeMapId.set(id);
+    this.mapsStore.addMap({
+      id: `map-${crypto.randomUUID()}`,
+      name,
+      background: '#1a1a1a',
+      imageUrl: loaded.objectUrl,
+      width: loaded.width,
+      height: loaded.height,
+      cellValue: DEFAULT_CELL_VALUE,
+      unit: DEFAULT_UNIT,
+    });
   }
 
   onCellValueChange(value: number) {
@@ -348,10 +349,7 @@ export class App {
   }
 
   private updateActiveMap(patch: Partial<MapEntry>) {
-    const id = this.activeMapId();
-    this.maps.update((list) =>
-      list.map((m) => (m.id === id ? { ...m, ...patch } : m)),
-    );
+    this.mapsStore.updateActiveMap(patch);
   }
 
   private async syncMapImageNode(id: string) {

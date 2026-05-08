@@ -1,41 +1,102 @@
 <div class="note">
   <div class="collapsed-face">
-    <ng-icon name="phosphorNote" size="22" />
+    <svg
+      class="note-pin"
+      viewBox="0 0 24 29"
+      width="100%"
+      height="100%"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M12 0C18.6274 0 23.9999 5.23528 24 11.6934C24 15.145 22.4642 18.2462 20.0234 20.3867L11.7422 29L3.44531 19.8906C1.31554 17.7803 0 14.8871 0 11.6934C0.000104723 5.23528 5.37265 0 12 0Z"
+        fill="url(#note-pin-gradient)"
+      />
+      <defs>
+        <linearGradient
+          id="note-pin-gradient"
+          x1="12"
+          y1="0"
+          x2="-11.622"
+          y2="23.5304"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stop-color="#14B8A6" />
+          <stop offset="1" stop-color="#09524A" />
+        </linearGradient>
+      </defs>
+    </svg>
   </div>
 
-  <div class="expanded-face">
-    @if (editing()) {
+  <div class="expanded-face" data-no-drag="true" data-no-pan="true">
+    @if (isInputMode()) {
       <textarea
-        class="note-textarea"
+        class="note-input"
+        placeholder="Write here..."
+        rows="1"
         data-no-drag="true"
         data-no-pan="true"
         [value]="draftText()"
-        (input)="onDraftInput($event)"
-        (blur)="save()"
+        (input)="onInput($event)"
+        (keydown.enter)="onEnter($event)"
         autofocus
       ></textarea>
       <button
         type="button"
-        class="note-action"
+        class="note-action note-action--primary"
+        title="Save"
+        aria-label="Save note"
         data-no-drag="true"
         data-no-pan="true"
-        (click)="save()"
+        (click)="submit()"
       >
-        <ng-icon name="phosphorCheck" size="14" />
-        <span>Save</span>
+        <ng-icon name="phosphorPaperPlaneRight" size="16" />
       </button>
     } @else {
       <p class="note-text">{{ node().data.text }}</p>
-      <button
-        type="button"
-        class="note-action"
-        data-no-drag="true"
-        data-no-pan="true"
-        (click)="startEdit()"
-      >
-        <ng-icon name="phosphorPencilSimple" size="14" />
-        <span>Edit</span>
-      </button>
+      <div class="more-wrapper" #moreWrapper>
+        <button
+          type="button"
+          class="note-action note-action--ghost"
+          title="More"
+          aria-label="Note actions"
+          [attr.aria-expanded]="dropdownOpen()"
+          data-no-drag="true"
+          data-no-pan="true"
+          (click)="toggleDropdown()"
+        >
+          <ng-icon name="phosphorDotsThreeVertical" size="16" />
+        </button>
+        @if (dropdownOpen()) {
+          <ul class="dropdown" role="menu">
+            <li>
+              <button
+                type="button"
+                class="dropdown-item"
+                data-no-drag="true"
+                data-no-pan="true"
+                (click)="startEdit()"
+              >
+                <ng-icon name="phosphorPencilSimple" size="14" />
+                <span>Edit</span>
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                class="dropdown-item dropdown-item--danger"
+                data-no-drag="true"
+                data-no-pan="true"
+                (click)="deleteNote()"
+              >
+                <ng-icon name="phosphorTrash" size="14" />
+                <span>Delete</span>
+              </button>
+            </li>
+          </ul>
+        }
+      </div>
     }
   </div>
 </div>

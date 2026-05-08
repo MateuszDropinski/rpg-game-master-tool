@@ -12,9 +12,10 @@ import { NgDiagramViewportService } from 'ng-diagram';
 import { CircleController } from '../circle/circle.controller';
 import { RulerController } from '../ruler/ruler.controller';
 import { NoteToolController } from './note-tool.controller';
+import { PinToolController } from './pin-tool.controller';
 import type { Tool } from './tool';
 
-type ToolName = 'ruler' | 'circle' | 'note';
+type ToolName = 'ruler' | 'circle' | 'note' | 'pin';
 
 @Component({
   selector: 'app-toolbar',
@@ -25,6 +26,7 @@ type ToolName = 'ruler' | 'circle' | 'note';
     RulerController,
     CircleController,
     NoteToolController,
+    PinToolController,
     provideIcons({
       phosphorRuler,
       phosphorAsterisk,
@@ -40,6 +42,7 @@ export class ToolbarComponent {
   private ruler = inject(RulerController);
   private circle = inject(CircleController);
   private note = inject(NoteToolController);
+  private pin = inject(PinToolController);
 
   readonly addCharacterClicked = output<void>();
 
@@ -82,6 +85,7 @@ export class ToolbarComponent {
     if (!this.dragging) return;
     this.dragging = false;
     this.currentController()?.end();
+    this.activeTool.set(null);
   }
 
   private currentController(): Tool | null {
@@ -92,6 +96,7 @@ export class ToolbarComponent {
     if (name === 'ruler') return this.ruler;
     if (name === 'circle') return this.circle;
     if (name === 'note') return this.note;
+    if (name === 'pin') return this.pin;
     return null;
   }
 

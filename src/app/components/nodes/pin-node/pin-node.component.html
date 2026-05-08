@@ -1,0 +1,79 @@
+<div class="pin" #pinWrapper>
+  <div class="pin-face">
+    <svg
+      class="pin-svg"
+      viewBox="0 0 24 29"
+      width="100%"
+      height="100%"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M12 0C18.6274 0 23.9999 5.23528 24 11.6934C24 15.145 22.4642 18.2462 20.0234 20.3867L11.7422 29L3.44531 19.8906C1.31554 17.7803 0 14.8871 0 11.6934C0.000104723 5.23528 5.37265 0 12 0Z"
+        fill="url(#pin-gradient)"
+      />
+      <g
+        class="pin-glyph"
+        transform="translate(4 4)"
+        stroke="#fff"
+        stroke-width="1.25"
+        stroke-linecap="round"
+      >
+        <circle cx="8" cy="8" r="4.5" fill="none" />
+        <line x1="8" y1="0.5" x2="8" y2="2.5" />
+        <line x1="8" y1="13.5" x2="8" y2="15.5" />
+        <line x1="0.5" y1="8" x2="2.5" y2="8" />
+        <line x1="13.5" y1="8" x2="15.5" y2="8" />
+        <circle cx="8" cy="8" r="1" fill="#fff" stroke="none" />
+      </g>
+      <defs>
+        <linearGradient
+          id="pin-gradient"
+          x1="12"
+          y1="0"
+          x2="-11.622"
+          y2="23.5304"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stop-color="#7C5CFF" />
+          <stop offset="1" stop-color="#2A1E66" />
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+
+  @if (dropdownOpen()) {
+    <div class="dropdown-wrap" data-no-drag="true" data-no-pan="true">
+      @if (otherMaps().length > 0) {
+        <ul class="dropdown" role="menu">
+          @for (map of otherMaps(); track map.id) {
+            <li>
+              <button
+                type="button"
+                class="dropdown-item"
+                data-no-drag="true"
+                data-no-pan="true"
+                (click)="goToMap(map.id)"
+              >
+                <span class="dropdown-item__name">{{ map.name }}</span>
+              </button>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="dropdown-empty">No other maps</p>
+      }
+      <button
+        type="button"
+        class="dropdown-delete"
+        data-no-drag="true"
+        data-no-pan="true"
+        (click)="deletePin()"
+      >
+        <ng-icon name="phosphorTrash" size="14" />
+        <span>Delete pin</span>
+      </button>
+    </div>
+  }
+</div>

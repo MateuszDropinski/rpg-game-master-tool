@@ -12,27 +12,14 @@
     <button
       type="button"
       class="toolbar__button"
-      title="Map pin"
-      aria-label="Map pin"
-      disabled
+      [class.toolbar__button--active]="activeTool() === 'pin'"
+      [attr.aria-pressed]="activeTool() === 'pin'"
+      title="Add pin — click on the map to place"
+      aria-label="Add pin"
+      (click)="toggle('pin')"
     >
       <ng-icon name="phosphorMapPinLine" size="16" />
     </button>
-    <button
-      type="button"
-      class="toolbar__button"
-      [class.toolbar__button--active]="activeTool() === 'circle'"
-      [attr.aria-pressed]="activeTool() === 'circle'"
-      title="Spell area — drag to set radius"
-      (click)="toggle('circle')"
-    >
-      <ng-icon name="phosphorAsterisk" size="16" />
-    </button>
-  </div>
-
-  <div class="toolbar__divider" role="separator"></div>
-
-  <div class="toolbar__group">
     <button
       type="button"
       class="toolbar__button"
@@ -52,6 +39,16 @@
       (click)="toggle('ruler')"
     >
       <ng-icon name="phosphorRuler" size="16" />
+    </button>
+    <button
+      type="button"
+      class="toolbar__button"
+      [class.toolbar__button--active]="activeTool() === 'circle'"
+      [attr.aria-pressed]="activeTool() === 'circle'"
+      title="Spell area — drag to set radius"
+      (click)="toggle('circle')"
+    >
+      <ng-icon name="phosphorAsterisk" size="16" />
     </button>
   </div>
 </nav>

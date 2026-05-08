@@ -26,11 +26,6 @@
   gap: var(--space-1, var(--spacing-1, 4px));
 }
 
-.toolbar__divider {
-  height: 1px;
-  background: rgba(255, 255, 255, 0.08);
-}
-
 .toolbar__button {
   display: flex;
   align-items: center;
