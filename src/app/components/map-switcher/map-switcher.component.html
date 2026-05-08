@@ -1,0 +1,27 @@
+<div class="pill" role="toolbar" aria-label="Maps">
+  @for (map of maps(); track map.id) {
+    <button
+      type="button"
+      class="map-button"
+      [class.active]="map.id === activeMapId()"
+      (click)="onActivate(map.id)"
+    >
+      {{ map.name }}
+    </button>
+  }
+  <button
+    type="button"
+    class="add-button"
+    title="Add map"
+    aria-label="Add map"
+    (click)="openDialog()"
+  >
+    <ng-icon name="phosphorPlus" size="16" />
+  </button>
+</div>
+
+<app-upload-map-dialog
+  [open]="dialogOpen()"
+  (cancel)="onDialogCancel()"
+  (submit)="onDialogSubmit($event)"
+/>
