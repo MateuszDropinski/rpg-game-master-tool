@@ -1,0 +1,62 @@
+:host {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.pill {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(31, 37, 48, 0.92);
+  backdrop-filter: blur(6px);
+  border: 1px solid #2a3140;
+  border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.map-button {
+  background: transparent;
+  color: #c9cdd6;
+  border: none;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.map-button:hover {
+  background: #2a3140;
+  color: #fff;
+}
+
+.map-button.active {
+  background: #4c8cff;
+  color: #fff;
+}
+
+.add-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: #c9cdd6;
+  cursor: pointer;
+  margin-left: 2px;
+}
+
+.add-button:hover {
+  background: #2a3140;
+  color: #fff;
+}

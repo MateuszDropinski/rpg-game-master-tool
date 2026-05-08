@@ -1,6 +1,20 @@
-<ng-diagram [model]="model" [config]="config">
-  <ng-diagram-background type="grid" />
-</ng-diagram>
-<div style="position: absolute; bottom: 24px; right: 24px;">
-  <app-cube [multiplier]="1" [value]="1" />
+<app-library-sidebar
+  [collapsed]="sidebarCollapsed()"
+  (collapsedChange)="sidebarCollapsed.set($event)"
+  (addClicked)="onAddLibraryItem()"
+/>
+
+<div class="canvas">
+  <app-map-switcher
+    [maps]="maps()"
+    [activeMapId]="activeMapId()"
+    (activate)="setActiveMap($event)"
+    (add)="addMap($event)"
+  />
+  <ng-diagram [model]="model" [config]="config" [style.background]="activeBackground()">
+    <ng-diagram-background type="grid" />
+  </ng-diagram>
+  <div style="position: absolute; bottom: 24px; right: 24px;">
+    <app-cube [multiplier]="1" [value]="1" />
+  </div>
 </div>

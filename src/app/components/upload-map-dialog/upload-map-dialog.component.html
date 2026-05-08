@@ -1,0 +1,58 @@
+<dialog
+  #dialogEl
+  class="dialog"
+  (close)="onDialogClose()"
+  (click)="onBackdropClick($event)"
+>
+  <form class="form" (submit)="onSubmit($event)">
+    <header class="header">
+      <h2 class="title">New map</h2>
+      <button
+        type="button"
+        class="icon-button"
+        title="Close"
+        aria-label="Close"
+        (click)="onCancel()"
+      >
+        <ng-icon name="phosphorX" size="18" />
+      </button>
+    </header>
+
+    <label class="field">
+      <span class="label">Name</span>
+      <input
+        type="text"
+        class="input"
+        placeholder="e.g. Tavern interior"
+        [value]="name()"
+        (input)="name.set($any($event.target).value)"
+      />
+    </label>
+
+    <label class="field">
+      <span class="label">Background image</span>
+      <input
+        type="file"
+        class="file"
+        accept="image/*"
+        (change)="onFileChange($event)"
+      />
+    </label>
+
+    @if (previewUrl(); as url) {
+      <div class="preview">
+        <img [src]="url" alt="" />
+      </div>
+    }
+
+    <footer class="footer">
+      <button type="button" class="button button-ghost" (click)="onCancel()">
+        Cancel
+      </button>
+      <button type="submit" class="button button-primary" [disabled]="!canSubmit()">
+        <ng-icon name="phosphorPlus" size="14" />
+        <span>Add map</span>
+      </button>
+    </footer>
+  </form>
+</dialog>
