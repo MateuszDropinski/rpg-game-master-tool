@@ -9,9 +9,8 @@ import {
 } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
-  phosphorBooks,
-  phosphorCaretRight,
   phosphorPlus,
+  phosphorSidebarSimple,
 } from '@ng-icons/phosphor-icons/regular';
 import { MapsStore } from '../../state/maps.store';
 import { NotesStore } from '../../state/notes.store';
@@ -23,7 +22,7 @@ type LibraryTab = 'characters' | 'notes';
   selector: 'app-library-sidebar',
   imports: [NgIcon],
   providers: [
-    provideIcons({ phosphorBooks, phosphorCaretRight, phosphorPlus }),
+    provideIcons({ phosphorPlus, phosphorSidebarSimple }),
   ],
   templateUrl: './library-sidebar.component.html',
   styleUrl: './library-sidebar.component.css',

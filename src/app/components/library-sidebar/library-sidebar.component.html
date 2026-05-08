@@ -7,34 +7,12 @@
       aria-label="Expand characters"
       (click)="toggle()"
     >
-      <ng-icon name="phosphorBooks" size="22" />
+      <ng-icon name="phosphorSidebarSimple" size="22" />
     </button>
   </aside>
 } @else {
   <aside class="panel">
     <div class="panel-header">
-      <div class="tab-bar" role="tablist" aria-label="Characters section">
-        <button
-          type="button"
-          role="tab"
-          class="filter-toggle-btn"
-          [class.active]="activeTab() === 'characters'"
-          [attr.aria-selected]="activeTab() === 'characters'"
-          (click)="setActiveTab('characters')"
-        >
-          Characters
-        </button>
-        <button
-          type="button"
-          role="tab"
-          class="filter-toggle-btn"
-          [class.active]="activeTab() === 'notes'"
-          [attr.aria-selected]="activeTab() === 'notes'"
-          (click)="setActiveTab('notes')"
-        >
-          Notes
-        </button>
-      </div>
       <button
         type="button"
         class="icon-button"
@@ -42,7 +20,31 @@
         aria-label="Collapse characters"
         (click)="toggle()"
       >
-        <ng-icon name="phosphorCaretRight" size="18" />
+        <ng-icon name="phosphorSidebarSimple" size="16" />
+      </button>
+      <span class="panel-title">Campaign</span>
+    </div>
+
+    <div class="tab-bar" role="tablist" aria-label="Characters section">
+      <button
+        type="button"
+        role="tab"
+        class="tab-btn"
+        [class.active]="activeTab() === 'characters'"
+        [attr.aria-selected]="activeTab() === 'characters'"
+        (click)="setActiveTab('characters')"
+      >
+        Characters
+      </button>
+      <button
+        type="button"
+        role="tab"
+        class="tab-btn"
+        [class.active]="activeTab() === 'notes'"
+        [attr.aria-selected]="activeTab() === 'notes'"
+        (click)="setActiveTab('notes')"
+      >
+        Notes
       </button>
     </div>
 
