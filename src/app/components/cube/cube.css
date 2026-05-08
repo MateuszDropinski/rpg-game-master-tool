@@ -23,7 +23,7 @@
   padding: 0;
   font: 500 14px/1 var(--font-roboto);
   color: var(--color-text-secondary);
-  background: transparent;
+  background: var(--color-bg-overlay);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--radius-xs);
   cursor: pointer;
@@ -62,7 +62,11 @@
   top: 50%;
   width: var(--edge);
   height: calc(var(--edge) * 0.8660254);
-  background: var(--color-bg-brand-subtle);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-border-brand) 35%, var(--color-bg-brand-subtle)) 0%,
+    var(--color-bg-brand-subtle) 40%
+  );
   clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
   backface-visibility: hidden;
   will-change: transform;
@@ -83,7 +87,7 @@
   font-family: var(--font-roboto);
   font-size: calc(var(--edge) * 0.22);
   font-weight: 700;
-  color: #fff;
+  color: var(--color-text-primary);
   pointer-events: none;
 }
 
@@ -101,6 +105,8 @@
 .draw-btn:hover:not(:disabled) { filter: brightness(1.15); }
 .draw-btn:active:not(:disabled) { filter: brightness(0.9); }
 .draw-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.cube.no-animation { transition: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .cube { transition: none; }

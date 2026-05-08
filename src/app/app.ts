@@ -25,7 +25,7 @@ import {
 } from 'ng-diagram';
 
 import { CircleAreaComponent } from './circle/circle-area.component';
-import { Cube } from './cube/cube';
+import { Cube } from './components/cube/cube';
 import {
   AddCharacterDialogComponent,
   type CharacterType,
@@ -37,6 +37,8 @@ import {
   type MapImageNodeData,
 } from './components/map-image-node/map-image-node.component';
 import { MapSwitcherComponent } from './components/map-switcher/map-switcher.component';
+import { MotionToggleComponent } from './components/motion-toggle/motion-toggle.component';
+import { RollDiceButtonComponent } from './components/roll-dice-button/roll-dice-button.component';
 import {
   NodeCharacterComponent,
   type CharacterNodeData,
@@ -69,7 +71,9 @@ const MAP_IMAGE_NODE_ID = 'map-bg';
     GridOverlayComponent,
     LibrarySidebarComponent,
     MapSwitcherComponent,
+    MotionToggleComponent,
     NodeCharacterComponent,
+    RollDiceButtonComponent,
     NoteNodeComponent,
     ScaleLegendComponent,
     ToolbarComponent,

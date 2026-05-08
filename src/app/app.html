@@ -1,4 +1,5 @@
 <div class="canvas">
+  <app-motion-toggle />
   <app-map-switcher
     [maps]="maps()"
     [activeMapId]="activeMapId()"
@@ -21,6 +22,7 @@
     </ng-diagram>
     <app-grid-overlay />
   </div>
+  <app-roll-dice-button [disabled]="cubeRef.isAnimating()" (roll)="cubeRef.draw()" />
   <app-toolbar (addCharacterClicked)="openAddCharacterDialog()" />
   @if (activeMap(); as map) {
     @if (map.imageUrl) {
@@ -46,8 +48,8 @@
       (unitChange)="onUnitChange($event)"
     />
   }
-  <div style="position: absolute; bottom: 24px; right: 24px;">
-    <app-cube [multiplier]="1" [value]="1" />
+  <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999;">
+    <app-cube #cubeRef [multiplier]="1" [value]="1" />
   </div>
 </div>
 

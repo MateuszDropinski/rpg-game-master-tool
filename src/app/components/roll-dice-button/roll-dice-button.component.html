@@ -1,0 +1,10 @@
+<button
+  type="button"
+  class="roll-btn"
+  [disabled]="disabled()"
+  (click)="roll.emit()"
+  title="Roll dice"
+  aria-label="Roll dice"
+>
+  <ng-icon name="phosphorDiceSix" size="16" />
+</button>
