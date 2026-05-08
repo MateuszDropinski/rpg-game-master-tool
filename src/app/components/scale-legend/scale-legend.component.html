@@ -1,0 +1,23 @@
+<div class="legend" role="group" aria-label="Map scale">
+  <span class="legend__square" aria-hidden="true"></span>
+  <span class="legend__equals">=</span>
+  <input
+    type="number"
+    class="legend__value"
+    min="1"
+    max="10000"
+    step="1"
+    [value]="cellValue()"
+    (input)="onValueInput($event)"
+    aria-label="Cell value"
+  />
+  <input
+    type="text"
+    class="legend__unit"
+    maxlength="12"
+    [value]="unit()"
+    (input)="onUnitInput($event)"
+    aria-label="Distance unit"
+    placeholder="ft"
+  />
+</div>

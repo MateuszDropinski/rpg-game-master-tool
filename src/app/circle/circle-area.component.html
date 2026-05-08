@@ -5,6 +5,6 @@
     [style.left.px]="labelLeftPx()"
     [style.top.px]="labelTopPx()"
   >
-    {{ radiusPx() }} px
+    {{ worldRadius() | number: '1.0-1' }} {{ unit() }}
   </div>
 </div>

@@ -11,19 +11,47 @@
     (activate)="setActiveMap($event)"
     (add)="addMap($event)"
   />
-  <ng-diagram
-    [model]="model"
-    [config]="config"
-    [nodeTemplateMap]="nodeTemplateMap"
-    [edgeTemplateMap]="edgeTemplateMap"
-    [style.background]="activeBackground()"
-    (nodeDragStarted)="onNodeDragStarted($event)"
-    (selectionMoved)="onSelectionMoved($event)"
-    (nodeDragEnded)="onNodeDragEnded()"
-  >
-    <ng-diagram-background type="grid" />
-  </ng-diagram>
+  <div class="diagram-wrap">
+    <ng-diagram
+      [model]="model"
+      [config]="config"
+      [nodeTemplateMap]="nodeTemplateMap"
+      [edgeTemplateMap]="edgeTemplateMap"
+      [style.background]="activeBackground()"
+      (nodeDragStarted)="onNodeDragStarted($event)"
+      (selectionMoved)="onSelectionMoved($event)"
+      (nodeDragEnded)="onNodeDragEnded()"
+      (nodeResizeEnded)="onNodeChanged()"
+      (nodeRotateEnded)="onNodeChanged()"
+    >
+    </ng-diagram>
+    <app-grid-overlay />
+  </div>
   <app-toolbar />
+  @if (activeMap(); as map) {
+    @if (map.imageUrl) {
+      <button
+        type="button"
+        class="lock-btn"
+        [class.lock-btn--locked]="map.imageLocked"
+        [title]="map.imageLocked ? 'Unlock map image' : 'Lock map image'"
+        [attr.aria-pressed]="!!map.imageLocked"
+        (click)="toggleImageLock()"
+      >
+        <ng-icon
+          [name]="map.imageLocked ? 'phosphorLock' : 'phosphorLockOpen'"
+          size="16"
+        />
+        <span>{{ map.imageLocked ? 'Locked' : 'Unlocked' }}</span>
+      </button>
+    }
+    <app-scale-legend
+      [cellValue]="map.cellValue"
+      [unit]="map.unit"
+      (cellValueChange)="onCellValueChange($event)"
+      (unitChange)="onUnitChange($event)"
+    />
+  }
   <div style="position: absolute; bottom: 24px; right: 24px;">
     <app-cube [multiplier]="1" [value]="1" />
   </div>
