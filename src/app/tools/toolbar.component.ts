@@ -74,6 +74,7 @@ export class ToolbarComponent {
         size: { width: 100, height: 100 },
         autoSize: false,
         resizable: true,
+        rotatable: true,
       },
     })),
   );

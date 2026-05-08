@@ -13,8 +13,8 @@ const CLASS_IMAGE_MAP = new Map(CHARACTER_TYPES.map((t) => [t.label, t.imageUrl]
 @Component({
   selector: 'app-node-character',
   imports: [
-    NgDiagramNodeRotateAdornmentComponent,
     NgDiagramNodeResizeAdornmentComponent,
+    NgDiagramNodeRotateAdornmentComponent,
   ],
   templateUrl: './node-character.component.html',
   styleUrl: './node-character.component.css',

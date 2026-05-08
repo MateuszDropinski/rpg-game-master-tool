@@ -66,6 +66,34 @@ import { ToolbarComponent } from './tools/toolbar.component';
 const MAP_IMAGE_NODE_TYPE = 'map-image';
 const mapImageNodeId = (mapId: string) => `map-bg-${mapId}`;
 
+/**
+ * `selected` and ng-diagram's computed/measured fields are owned by the
+ * selection/measurement services. Persisting and re-injecting them on a tab
+ * swap leaves the resize/rotate adornments rendered while the selection
+ * service's internal list is empty — clicks then land on stale handles and
+ * the node appears unclickable.
+ */
+function stripVolatileNodeFields<N extends Node>(node: N): N {
+  const {
+    selected: _selected,
+    measuredBounds: _measuredBounds,
+    measuredPorts: _measuredPorts,
+    computedZIndex: _computedZIndex,
+    ...rest
+  } = node as N & {
+    selected?: boolean;
+    measuredBounds?: unknown;
+    measuredPorts?: unknown;
+    computedZIndex?: unknown;
+  };
+  return rest as N;
+}
+
+function stripVolatileEdgeFields<E extends { selected?: boolean }>(edge: E): E {
+  const { selected: _selected, ...rest } = edge;
+  return rest as E;
+}
+
 @Component({
   selector: 'app-root',
   imports: [
@@ -363,8 +391,8 @@ export class App {
     const nodes = this.modelService
       .nodes()
       .filter((n) => n.type !== MAP_IMAGE_NODE_TYPE)
-      .map((n) => ({ ...n }));
-    const edges = this.modelService.edges().map((e) => ({ ...e }));
+      .map((n) => stripVolatileNodeFields(n));
+    const edges = this.modelService.edges().map((e) => stripVolatileEdgeFields(e));
     const viewport = { ...this.viewportService.viewport() };
     this.maps.update((list) =>
       list.map((m) => (m.id === id ? { ...m, nodes, edges, viewport } : m)),
@@ -413,9 +441,14 @@ export class App {
         nodeIds: [imageNode.id],
         padding: 24,
       });
-    } else {
-      this.viewportService.setViewport(0, 0, 1);
     }
+
+    // Force re-measurement of every node/port at the *final* viewport. Without
+    // this, nodes are measured during addNodes() above with whatever viewport
+    // was carried over from the previous tab. If the previous tab was zoomed,
+    // their cached DOM bounds are offset and subsequent hit-testing misses the
+    // visible node — cursor doesn't even change on hover.
+    this.diagramService.invalidateMeasurements();
   }
 
   private buildMapImageNode(map: MapEntry | null): Node<MapImageNodeData> | null {
