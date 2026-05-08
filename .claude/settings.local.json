@@ -1,4 +1,10 @@
 {
+  "permissions": {
+    "allow": [
+      "mcp__ng-diagram-docs__search_docs",
+      "Bash(pnpm add *)"
+    ]
+  },
   "enabledMcpjsonServers": [
     "ng-diagram-docs",
     "figma"

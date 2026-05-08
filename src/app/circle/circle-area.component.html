@@ -1,0 +1,10 @@
+<div class="spell-area" [class.spell-area--selected]="selected()">
+  <div class="spell-area__radius-line" [style.transform]="lineTransform()"></div>
+  <div
+    class="spell-area__label"
+    [style.left.px]="labelLeftPx()"
+    [style.top.px]="labelTopPx()"
+  >
+    {{ radiusPx() }} px
+  </div>
+</div>

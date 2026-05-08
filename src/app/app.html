@@ -11,9 +11,16 @@
     (activate)="setActiveMap($event)"
     (add)="addMap($event)"
   />
-  <ng-diagram [model]="model" [config]="config" [style.background]="activeBackground()">
+  <ng-diagram
+    [model]="model"
+    [config]="config"
+    [nodeTemplateMap]="nodeTemplateMap"
+    [edgeTemplateMap]="edgeTemplateMap"
+    [style.background]="activeBackground()"
+  >
     <ng-diagram-background type="grid" />
   </ng-diagram>
+  <app-toolbar />
   <div style="position: absolute; bottom: 24px; right: 24px;">
     <app-cube [multiplier]="1" [value]="1" />
   </div>
