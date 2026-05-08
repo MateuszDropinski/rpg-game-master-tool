@@ -7,6 +7,14 @@ description: Use when the user asks to implement, build, port, or translate a Fi
 
 This project consumes designs from a Figma file the designer maintains. Use the `figma` MCP server (configured in `.mcp.json`) to read design data — never guess properties, never invent values.
 
+## Default file
+
+Unless the user specifies otherwise, the project's design source is:
+
+- **Game Master Tool** — fileKey `rRQr0eB6Tm5GdvBfBWbjyc` (https://www.figma.com/design/rRQr0eB6Tm5GdvBfBWbjyc/Game-Master-Tool)
+
+When the user refers to "the design", "the Figma", or names a frame/component without giving a URL, assume this file. If they paste a different Figma URL, use that instead.
+
 ## When this skill applies
 
 Trigger on requests like:
@@ -14,8 +22,9 @@ Trigger on requests like:
 - "Build the <component> from Figma"
 - "Match the design at <figma link>"
 - "Port the selected frame to Angular"
+- "Implement the <named frame>" (resolve via the default file above)
 
-If the user does not provide a Figma URL or describe a selected frame, ask for one before continuing. Do not fabricate.
+If the user names a frame but you cannot locate it in the default file, call `get_metadata` on the file root and confirm the matching node id with the user before continuing. Do not fabricate node ids or property values.
 
 ## Step 1 — Read the design
 

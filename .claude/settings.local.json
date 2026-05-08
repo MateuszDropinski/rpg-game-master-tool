@@ -1,0 +1,6 @@
+{
+  "enabledMcpjsonServers": [
+    "ng-diagram-docs",
+    "figma"
+  ]
+}
