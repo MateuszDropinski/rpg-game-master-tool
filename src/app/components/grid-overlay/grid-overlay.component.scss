@@ -1,0 +1,18 @@
+:host {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.grid-overlay-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  &__line {
+    stroke: rgba(255, 255, 255, 0.45);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+}

@@ -1,0 +1,19 @@
+<svg class="grid-overlay-svg" width="100%" height="100%">
+  <defs>
+    <pattern
+      id="grid-overlay-pattern"
+      patternUnits="userSpaceOnUse"
+      [attr.x]="vx()"
+      [attr.y]="vy()"
+      [attr.width]="cellPxScaled()"
+      [attr.height]="cellPxScaled()"
+    >
+      <path
+        class="grid-overlay-svg__line"
+        [attr.d]="'M ' + cellPxScaled() + ' 0 L 0 0 0 ' + cellPxScaled()"
+        fill="none"
+      />
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#grid-overlay-pattern)" />
+</svg>

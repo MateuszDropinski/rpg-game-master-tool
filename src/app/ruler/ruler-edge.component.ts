@@ -1,3 +1,4 @@
+import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import {
   NgDiagramBaseEdgeComponent,
@@ -7,9 +8,11 @@ import {
   type NgDiagramEdgeTemplate,
 } from 'ng-diagram';
 
+import { MapScaleService } from '../services/map-scale.service';
+
 @Component({
   selector: 'app-ruler-edge',
-  imports: [NgDiagramBaseEdgeComponent, NgDiagramBaseEdgeLabelComponent],
+  imports: [DecimalPipe, NgDiagramBaseEdgeComponent, NgDiagramBaseEdgeLabelComponent],
   template: `
     <ng-diagram-base-edge
       [edge]="anchoredEdge()"
@@ -18,7 +21,9 @@ import {
       strokeDasharray="6 4"
     >
       <ng-diagram-base-edge-label id="ruler-distance" [positionOnEdge]="0.5">
-        <div class="ruler-edge__label">{{ distance() }} px</div>
+        <div class="ruler-edge__label">
+          {{ worldDistance() | number: '1.0-1' }} {{ unit() }}
+        </div>
       </ng-diagram-base-edge-label>
     </ng-diagram-base-edge>
   `,
@@ -40,6 +45,7 @@ import {
 })
 export class RulerEdgeComponent implements NgDiagramEdgeTemplate {
   private modelService = inject(NgDiagramModelService);
+  private scaleService = inject(MapScaleService);
 
   edge = input.required<Edge>();
 
@@ -59,11 +65,17 @@ export class RulerEdgeComponent implements NgDiagramEdgeTemplate {
     };
   });
 
-  distance = computed(() => {
+  private distancePx = computed(() => {
     const e = this.anchoredEdge();
     const s = e.sourcePosition;
     const t = e.targetPosition;
     if (!s || !t) return 0;
-    return Math.round(Math.hypot(t.x - s.x, t.y - s.y));
+    return Math.hypot(t.x - s.x, t.y - s.y);
   });
+
+  worldDistance = computed(
+    () => this.distancePx() * this.scaleService.unitsPerPx(),
+  );
+
+  unit = this.scaleService.unit;
 }

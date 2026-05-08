@@ -11,3 +11,16 @@ app-root {
   display: flex;
   height: 100%;
 }
+
+/* ngDiagram's <ng-diagram-node> wrapper has pointer-events: none by default;
+   the actual click target is the inner <div class="node-content"> which has
+   pointer-events: all. Disable pointer events there to block selection on
+   locked images, and strip the selection ring on the wrapper for any
+   lingering selected state. */
+.node-content:has(app-map-image-node.locked) {
+  pointer-events: none !important;
+}
+
+.ng-diagram-node-wrapper:has(app-map-image-node.locked) {
+  box-shadow: none !important;
+}
