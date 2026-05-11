@@ -12,18 +12,19 @@
       [config]="config"
       [nodeTemplateMap]="nodeTemplateMap"
       [edgeTemplateMap]="edgeTemplateMap"
-      [style.background]="activeBackground()"
+      [style.background]="background"
       (nodeDragStarted)="onNodeDragStarted($event)"
       (selectionMoved)="onSelectionMoved($event)"
       (nodeDragEnded)="onNodeDragEnded()"
       (nodeResizeEnded)="onNodeChanged()"
       (nodeRotateEnded)="onNodeChanged()"
+      (paletteItemDropped)="onPaletteItemDropped($event)"
     >
     </ng-diagram>
     <app-grid-overlay />
   </div>
   <app-roll-dice-button [disabled]="cubeRef.isAnimating()" (roll)="cubeRef.draw()" />
-  <app-toolbar (addCharacterClicked)="openAddCharacterDialog()" />
+  <app-toolbar />
   @if (activeMap(); as map) {
     @if (map.imageUrl) {
       <app-lock-map-image-toggle

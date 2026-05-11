@@ -10,6 +10,18 @@
   font-family: var(--font-roboto);
 }
 
+/* Native form controls don't inherit font-family by default — pin every
+   element inside the dialog to Roboto so file input "Choose file" buttons,
+   close icons, etc. don't fall back to the browser default. */
+.dialog,
+.dialog input,
+.dialog button,
+.dialog select,
+.dialog textarea,
+.dialog ::file-selector-button {
+  font-family: var(--font-roboto);
+}
+
 .dialog::backdrop {
   background: rgba(8, 11, 18, 0.6);
   backdrop-filter: blur(2px);
@@ -62,7 +74,7 @@
 .label {
   font-size: 12px;
   color: var(--color-text-secondary);
-  text-transform: uppercase;
+  text-transform: lowercase;
   letter-spacing: 0.04em;
 }
 

@@ -11,9 +11,9 @@ export class MapsStore {
   readonly maps = signal<MapEntry[]>([
     {
       id: 'map-1',
-      name: 'Map 1',
+      name: 'City',
       background: '#1a1a1a',
-      imageUrl: 'world%20map%203.jpeg',
+      imageUrl: 'world.jpeg',
       width: 1800,
       height: 1350,
       cellValue: DEFAULT_CELL_VALUE,
@@ -21,8 +21,11 @@ export class MapsStore {
     },
     {
       id: 'map-2',
-      name: 'Map 2',
+      name: 'House',
       background: '#5d3a1a',
+      imageUrl: 'location.jpeg',
+      width: 1333,
+      height: 1000,
       cellValue: DEFAULT_CELL_VALUE,
       unit: DEFAULT_UNIT,
     },
